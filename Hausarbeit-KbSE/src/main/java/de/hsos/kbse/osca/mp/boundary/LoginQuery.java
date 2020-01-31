@@ -85,14 +85,28 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             return null;
         } else {
 
-            if(this.cust.getAccountType()==1) {
+            if (this.cust.getAccountType() == 1) {
                 this.loggedIn = true;
                 this.accountId = this.cust.getId();
                 return "modulAnlegenDozent.xhtml?faces-redirect=true";
             }
-
+            //Alternativ Route? 
             return null;
         }
+    }
+
+    public String logout() {
+        System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.logout()");
+        //System.out.println("1 Username: " + this.username + " Password: " + this.password);
+
+        if (this.loggedIn == true) {
+            System.out.println("Inside: logout()");
+            this.loggedIn = true;
+            this.accountId = this.cust.getId();
+            return "login.xhtml?faces-redirect=true";
+        }
+        //Alternativ Route? 
+        return null;
     }
 
 }

@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 public class FillDatabase extends AbstractRepoAccesor {
 
     @PostConstruct
-    void init() {
+    void fill() {
         Locale.setDefault(Locale.GERMANY);
         System.out.println("Outside IF!\n");
 
