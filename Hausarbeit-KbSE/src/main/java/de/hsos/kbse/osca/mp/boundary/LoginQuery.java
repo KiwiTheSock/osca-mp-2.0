@@ -53,7 +53,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
         //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         this.cust = Customers.getByLogin(this.username);
-        if (this.cust == null | !cust.getStudentPassword().equals(this.password)) {
+        if (this.cust == null | !cust.getPassword().equals(this.password)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
             return null;
         } else {
@@ -80,12 +80,12 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
         //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         this.cust = Customers.getByLogin(this.username);
-        if (this.cust == null | !cust.getStudentPassword().equals(this.password)) {
+        if (this.cust == null | !cust.getPassword().equals(this.password)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
             return null;
         } else {
 
-            if (this.cust.getAccountType() == 1) {
+            if(this.cust.getType()==1) {
                 this.loggedIn = true;
                 this.accountId = this.cust.getId();
                 return "modulAnlegenDozent.xhtml?faces-redirect=true";

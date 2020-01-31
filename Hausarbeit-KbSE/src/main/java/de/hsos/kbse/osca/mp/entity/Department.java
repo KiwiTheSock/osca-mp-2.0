@@ -6,56 +6,79 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
-import java.util.HashSet;
-import java.util.Objects;
+import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
- * @author Philipp
+ * @author nordm
  */
 @Entity
-@Table(name = "Department")
+@Table(name = "DEPARTMENT", schema = "X")
+@NamedQueries({
+    @NamedQuery(name = "Department.findAll", query = "SELECT d FROM Department d"),
+    @NamedQuery(name = "Department.findById", query = "SELECT d FROM Department d WHERE d.id = :id"),
+    @NamedQuery(name = "Department.findByModulename", query = "SELECT d FROM Department d WHERE d.modulename = :modulename"),
+    @NamedQuery(name = "Department.findBySemester", query = "SELECT d FROM Department d WHERE d.semester = :semester")})
 public class Department extends AbstractEntity {
-    
-    //ID wird in AbstractEntity erstellt
-    @NotNull(message = "Modulename can't be empty")
-    private String moduleName;
-    @NotNull(message = "Semester can't be empty")
-    private String semester;
-    
-    @ManyToMany
-    private Set<Customer> users = new HashSet<>();;
 
-    @OneToMany
-    private Set<Exam> exam = new HashSet<>();;
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Long id;
+
+    private String modulename;
+
+    private String semester;
+
+//    @OneToMany(cascade = {CascadeType.ALL})
+//    private Set<Customer> customerSet;
+    @OneToMany(cascade = {CascadeType.ALL})
+    private Set<Exam> examSet;
+
     public Department() {
     }
 
-    public Department(String moduleName, String semester) {
-        this.moduleName = moduleName;
+    public Department(Long id) {
+        this.id = id;
+    }
+
+    public Department(String modulename, String semester) {
+        this.modulename = modulename;
         this.semester = semester;
     }
 
-    public Department(String moduleName, String semester, HashSet<Customer> users, HashSet<Exam> exam) {
-        this.moduleName = moduleName;
-        this.semester = semester;
-        this.users = users;
-        this.exam = exam;
+    @Override
+    public Long getId() {
+        return id;
     }
 
-    public String getModuleName() {
-        return moduleName;
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
+    public String getModulename() {
+        return modulename;
+    }
+
+    public void setModulename(String modulename) {
+        this.modulename = modulename;
     }
 
     public String getSemester() {
@@ -66,54 +89,29 @@ public class Department extends AbstractEntity {
         this.semester = semester;
     }
 
-    public Set<Customer> getUsers() {
-        return users;
+    public Set<Exam> getExamSet() {
+        return examSet;
     }
 
-    public void setUsers(HashSet<Customer> users) {
-        this.users = users;
-    }
-
-    public Set<Exam> getExam() {
-        return exam;
-    }
-
-    public void setExam(HashSet<Exam> exam) {
-        this.exam = exam;
+    public void setExamSet(Set<Exam> examSet) {
+        this.examSet = examSet;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.moduleName);
-        hash = 47 * hash + Objects.hashCode(this.semester);
-        hash = 47 * hash + Objects.hashCode(this.users);
-        hash = 47 * hash + Objects.hashCode(this.exam);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Department)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Department other = (Department) obj;
-        if (this.semester != other.semester) {
-            return false;
-        }
-        if (!Objects.equals(this.moduleName, other.moduleName)) {
-            return false;
-        }
-        if (!Objects.equals(this.users, other.users)) {
-            return false;
-        }
-        if (!Objects.equals(this.exam, other.exam)) {
+        Department other = (Department) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -121,9 +119,7 @@ public class Department extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Fach{" + "moduleName=" + moduleName + ", semester=" + semester + ", users=" + users + ", exam=" + exam + '}';
+        return "de.hsos.kbse.osca.mp.entity.Department[ id=" + id + " ]";
     }
 
-
-    
 }
