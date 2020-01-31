@@ -14,6 +14,11 @@ import javax.servlet.http.HttpSession;
  * @author PMarkmann
  */
 public class SessionHandler {
-    public static final Map<Long, HttpSession> logins = new HashMap<>();
+    
+    private static final Map<Long, HttpSession> logins = new HashMap<>();
+    
+    public static void createSession(Long id) {
+        
+    }
     
 }

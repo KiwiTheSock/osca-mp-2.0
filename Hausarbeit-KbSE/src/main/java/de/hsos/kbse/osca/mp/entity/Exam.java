@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import javax.persistence.Temporal;
  * @author nordm
  */
 @Entity
-@Table(name = "EXAM", schema = "X")
+@Table(name = "EXAM")
 @NamedQueries({
     @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e"),
     @NamedQuery(name = "Exam.findById", query = "SELECT e FROM Exam e WHERE e.id = :id"),
@@ -34,10 +35,6 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents"),
     @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.start = :start")})
 public class Exam extends AbstractEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date day;
@@ -57,12 +54,6 @@ public class Exam extends AbstractEntity {
 
     public Exam() {
     }
-
-    public Exam(Long id) {
-        this.id = id;
-    }
-
-    
     
     public Date getStart() {
         return start;
@@ -87,19 +78,7 @@ public class Exam extends AbstractEntity {
     public void setTimeslotSet(Set<Timeslot> timeslotSet) {
         this.timeslotSet = timeslotSet;
     }
-
     
-    
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Date getDay() {
         return day;
     }
@@ -124,23 +103,46 @@ public class Exam extends AbstractEntity {
         this.spaceforstudents = spaceforstudents;
     }
 
-
-
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.day);
+        hash = 29 * hash + Objects.hashCode(this.duration);
+        hash = 29 * hash + Objects.hashCode(this.start);
+        hash = 29 * hash + Objects.hashCode(this.finish);
+        hash = 29 * hash + Objects.hashCode(this.spaceforstudents);
+        hash = 29 * hash + Objects.hashCode(this.timeslotSet);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Exam)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Exam other = (Exam) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Exam other = (Exam) obj;
+        if (!Objects.equals(this.day, other.day)) {
+            return false;
+        }
+        if (!Objects.equals(this.duration, other.duration)) {
+            return false;
+        }
+        if (!Objects.equals(this.start, other.start)) {
+            return false;
+        }
+        if (!Objects.equals(this.finish, other.finish)) {
+            return false;
+        }
+        if (!Objects.equals(this.spaceforstudents, other.spaceforstudents)) {
+            return false;
+        }
+        if (!Objects.equals(this.timeslotSet, other.timeslotSet)) {
             return false;
         }
         return true;
@@ -148,7 +150,7 @@ public class Exam extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "de.hsos.kbse.osca.mp.entity.Exam[ id=" + id + " ]";
+        return "Exam{" + "day=" + day + ", duration=" + duration + ", start=" + start + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", timeslotSet=" + timeslotSet + '}';
     }
-
+  
 }

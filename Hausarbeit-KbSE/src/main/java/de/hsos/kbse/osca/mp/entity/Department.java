@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -30,7 +31,7 @@ import javax.validation.constraints.Size;
  * @author nordm
  */
 @Entity
-@Table(name = "DEPARTMENT", schema = "X")
+@Table(name = "DEPARTMENT")
 @NamedQueries({
     @NamedQuery(name = "Department.findAll", query = "SELECT d FROM Department d"),
     @NamedQuery(name = "Department.findById", query = "SELECT d FROM Department d WHERE d.id = :id"),
@@ -38,12 +39,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Department.findBySemester", query = "SELECT d FROM Department d WHERE d.semester = :semester")})
 public class Department extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
-
     private String modulename;
-
     private String semester;
 
 //    @OneToMany(cascade = {CascadeType.ALL})
@@ -54,23 +50,9 @@ public class Department extends AbstractEntity {
     public Department() {
     }
 
-    public Department(Long id) {
-        this.id = id;
-    }
-
     public Department(String modulename, String semester) {
         this.modulename = modulename;
         this.semester = semester;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getModulename() {
@@ -99,19 +81,32 @@ public class Department extends AbstractEntity {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 19 * hash + Objects.hashCode(this.modulename);
+        hash = 19 * hash + Objects.hashCode(this.semester);
+        hash = 19 * hash + Objects.hashCode(this.examSet);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Department)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Department other = (Department) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Department other = (Department) obj;
+        if (!Objects.equals(this.modulename, other.modulename)) {
+            return false;
+        }
+        if (!Objects.equals(this.semester, other.semester)) {
+            return false;
+        }
+        if (!Objects.equals(this.examSet, other.examSet)) {
             return false;
         }
         return true;
@@ -119,7 +114,6 @@ public class Department extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "de.hsos.kbse.osca.mp.entity.Department[ id=" + id + " ]";
+        return "Department{" + "modulename=" + modulename + ", semester=" + semester + ", examSet=" + examSet + '}';
     }
-
 }
