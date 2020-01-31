@@ -6,17 +6,20 @@
 package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepository;
+import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Timeslot;
+import javax.enterprise.context.RequestScoped;
 
 /**
  *
  * @author Philipp
  */
+@RequestScoped
 public class TimeSlotRepository extends AbstractRepository<Timeslot>{
  
     
     public TimeSlotRepository() {
-        
+        this.entityClass = Timeslot.class;
     }
     
 }

@@ -25,11 +25,6 @@ public class FillDatabase extends AbstractRepoAccesor {
     public void fill() {
         Locale.setDefault(Locale.GERMANY);
         System.out.println("Outside IF!\n");
-
-        //Check if database is filled
-        /*        if(query()) {
-        
-        }*/
         
         if (Customers.getAll().isEmpty()) {
             

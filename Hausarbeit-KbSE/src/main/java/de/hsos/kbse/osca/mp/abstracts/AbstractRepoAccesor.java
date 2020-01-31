@@ -7,6 +7,8 @@ package de.hsos.kbse.osca.mp.abstracts;
 
 import de.hsos.kbse.osca.mp.controller.CustomerRepository;
 import de.hsos.kbse.osca.mp.controller.DepartmentRepository;
+import de.hsos.kbse.osca.mp.controller.ExamRepository;
+import de.hsos.kbse.osca.mp.controller.TimeSlotRepository;
 import javax.inject.Inject;
 
 /**
@@ -20,7 +22,7 @@ public abstract class AbstractRepoAccesor {
     @Inject
     protected DepartmentRepository Departments;
     @Inject
-    protected DepartmentRepository Exams;
+    protected ExamRepository Exams;
     @Inject
-    protected DepartmentRepository TimeSlots;
+    protected TimeSlotRepository TimeSlots;
 }

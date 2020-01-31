@@ -9,7 +9,6 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpSession;
  * @author Philipp
  */
 @Named
-@SessionScoped
+@RequestScoped
 public class LoginQuery extends AbstractRepoAccesor implements Serializable {
 
     boolean loggedIn;
@@ -46,7 +45,8 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    
     //Customer customer = new Customer();
     public String login() {
 
