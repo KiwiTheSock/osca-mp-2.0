@@ -14,11 +14,27 @@ import javax.servlet.http.HttpSession;
  * @author PMarkmann
  */
 public class SessionHandler {
-    
+
     private static final Map<Long, HttpSession> logins = new HashMap<>();
-    
-    public static void createSession(Long id) {
-        
+
+    public static void store(Long id, HttpSession session) {
+        System.out.println("de.hsos.kbse.osca.mp.boundary.SessionHandler.store()\nID: " + id + " hinzugefügt!\n");
+        logins.put(id, session);
     }
-    
+
+    public static void delete(Long id) {
+        HttpSession session = logins.get(id);
+        if (session != null) {
+            logins.remove(id);
+            session.invalidate();
+        }
+    }
+
+    public static void remove(Long id) {
+        HttpSession session = logins.get(id);
+        if (session != null) {
+            logins.remove(id);
+        }
+    }
+
 }

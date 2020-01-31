@@ -12,3 +12,4 @@ buildNumber.properties
 Hausarbeit-KbSE/src/main/resources/META-INF/persistence.xml
 Hausarbeit-KbSE/src/main/resources/META-INF/persistence.xml
 Hausarbeit-KbSE/src/main/webapp/WEB-INF/glassfish-resources.xml
+*.xml

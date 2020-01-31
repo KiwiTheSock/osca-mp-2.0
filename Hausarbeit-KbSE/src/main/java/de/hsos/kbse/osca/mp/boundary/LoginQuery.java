@@ -13,6 +13,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -61,15 +62,13 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             this.loggedIn = true;
             this.accountId = this.cust.getId();
 
-            /*
-        SessionHandler wird wofür benötigt? 
-        try {
-        HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        SessionHandler.put(accountId, sessionObj);
-        
-        } catch (Exeption ex) {
-        
-        }*/
+            try {
+                HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+                SessionHandler.store(accountId, sessionObj);
+            } catch (Exception ex) {
+                System.out.println("HTTPSession went wrong");
+            }
+
             return "modulAuswahlStudent.xhtml?faces-redirect=true";
         }
     }
@@ -85,7 +84,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             return null;
         } else {
 
-            if(this.cust.getType()==1) {
+            if (this.cust.getType() == 1) {
                 this.loggedIn = true;
                 this.accountId = this.cust.getId();
                 return "modulAnlegenDozent.xhtml?faces-redirect=true";
