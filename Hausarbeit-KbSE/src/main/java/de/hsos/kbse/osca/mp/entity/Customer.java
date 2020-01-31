@@ -5,69 +5,86 @@
  */
 package de.hsos.kbse.osca.mp.entity;
 
-
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Philipp Markmann
+ * @author nordm
  */
-
 @Entity
-@Table(name = "Customer")
-public class Customer extends AbstractEntity{
+@Table(name = "CUSTOMER", schema = "X")
+@NamedQueries({
+    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
+    @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id"),
+    @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email"),
+    @NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname"),
+    @NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname"),
+    @NamedQuery(name = "Customer.findByLogin", query = "SELECT c FROM Customer c WHERE c.login = :login"),
+    @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password"),
+    @NamedQuery(name = "Customer.findByType", query = "SELECT c FROM Customer c WHERE c.type = :type")})
+public class Customer extends AbstractEntity {
 
-    
-    @NotNull(message = "Firstname may not be empty")
-    private String firstname;
-    @NotNull(message = "Lastname may not be empty")
-    private String lastname;
-    
-    @NotNull(message = "Email may not be empty")
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Long id;
+
     private String email;
-    
-    /**
-     * 
-     * Wird eine PLZ, Straße und Stadt benötigt? 
-     * 
-     * @NotNull(message = "PLZ may not be empty)
-     * pirvate int plz;
-     * 
-     * @NotNull(message = "Street may not be empty)
-     * private String street;
-     * @NotNull(message = "City may not be empty)
-     * private String city
-     */
-    
-    @NotNull(message = "Username may not be empty")
-    private String studentLogin;
-    @NotNull(message = "Password may not be empty")
-    private String studentPassword;
-    
-    private int accountType; // Admin, Student, Dozent
-    
-    //Relation zu Modul (OOAD, Mathe 2,...)
-    @ManyToMany
-    private Set<Department> modules = new HashSet<>();
 
+    private String firstname;
+
+    private String lastname;
+
+    private String login;
+
+    private String password;
+
+    private Integer type;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    private Set<Department> departmentSet;
 
     public Customer() {
     }
 
-    public Customer(String firstname, String lastname, String email, String studentLogin, String studentPassword, int accountType) {
+    public Customer(String email, String firstname, String lastname, String login, String password, Integer type) {
+        this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.login = login;
+        this.password = password;
+        this.type = type;
+    }
+    
+    public Customer(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
-        this.studentLogin = studentLogin;
-        this.studentPassword = studentPassword;
-        this.accountType = accountType;
     }
 
     public String getFirstname() {
@@ -86,88 +103,61 @@ public class Customer extends AbstractEntity{
         this.lastname = lastname;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLogin() {
+        return login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getStudentLogin() {
-        return studentLogin;
+    public String getPassword() {
+        return password;
     }
 
-    public void setStudentLogin(String studentLogin) {
-        this.studentLogin = studentLogin;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getStudentPassword() {
-        return studentPassword;
+    public Integer getType() {
+        return type;
     }
 
-    public void setStudentPassword(String studentPassword) {
-        this.studentPassword = studentPassword;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public int getAccountType() {
-        return accountType;
+    public Set<Department> getDepartmentSet() {
+        return departmentSet;
     }
 
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" + "firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", studentLogin=" + studentLogin + ", studentPassword=" + studentPassword + ", accountType=" + accountType + '}';
+    public void setDepartmentSet(Set<Department> departmentSet) {
+        this.departmentSet = departmentSet;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 83 * hash + Objects.hashCode(this.firstname);
-        hash = 83 * hash + Objects.hashCode(this.lastname);
-        hash = 83 * hash + Objects.hashCode(this.email);
-        hash = 83 * hash + Objects.hashCode(this.studentLogin);
-        hash = 83 * hash + Objects.hashCode(this.studentPassword);
-        hash = 83 * hash + this.accountType;
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Customer)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Customer other = (Customer) obj;
-        if (this.accountType != other.accountType) {
-            return false;
-        }
-        if (!Objects.equals(this.firstname, other.firstname)) {
-            return false;
-        }
-        if (!Objects.equals(this.lastname, other.lastname)) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        if (!Objects.equals(this.studentLogin, other.studentLogin)) {
-            return false;
-        }
-        if (!Objects.equals(this.studentPassword, other.studentPassword)) {
+        Customer other = (Customer) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
 
-  
+    @Override
+    public String toString() {
+        return "de.hsos.kbse.osca.mp.entity.Customer[ id=" + id + " ]";
+    }
 
 }
