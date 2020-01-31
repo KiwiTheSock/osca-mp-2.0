@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -37,8 +38,25 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> {
     }
 
     @POST
-    @Override
+//    @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response newCustomer() {
+        try {
+            Customer customer = new Customer("Firstname", "lastname", "email", "studentLogin", "studentPassword", 1);
+            this.create(customer);
+            return Response
+                    .status(200)
+                    .entity("newEntity : " + customer.getFirstname() + " with " + customer.getLastname()
+                            + " and " + customer.getEmail() + " and " + customer.getLogin()
+                            + " and " + customer.getPassword() + " and " + customer.getType()).build();
+        } catch (NullPointerException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+//    @POST
+    @Override
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Customer entity) {
         super.create(entity);
     }
@@ -88,5 +106,5 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
