@@ -5,6 +5,7 @@
  */
 package de.hsos.kbse.osca.mp.service;
 
+import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Timeslot;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -20,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -37,8 +39,23 @@ public class TimeslotFacadeREST extends AbstractFacade<Timeslot> {
     }
 
     @POST
-    @Override
+//    @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response newTimeslot() {
+        try {
+            Timeslot timeslot = new Timeslot();
+            this.create(timeslot);
+            return Response
+                    .status(200)
+                    .entity("newEntity : " + timeslot.getSlot()).build();
+        } catch (NullPointerException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+//    @POST
+    @Override
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Timeslot entity) {
         super.create(entity);
     }
@@ -88,5 +105,5 @@ public class TimeslotFacadeREST extends AbstractFacade<Timeslot> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
