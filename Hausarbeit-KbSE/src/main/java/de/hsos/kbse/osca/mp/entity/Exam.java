@@ -6,6 +6,7 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
+import java.sql.Time;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -29,23 +30,21 @@ import javax.persistence.Temporal;
 @NamedQueries({
     @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e"),
     @NamedQuery(name = "Exam.findById", query = "SELECT e FROM Exam e WHERE e.id = :id"),
-    @NamedQuery(name = "Exam.findByDay", query = "SELECT e FROM Exam e WHERE e.day = :day"),
+    @NamedQuery(name = "Exam.findByDay", query = "SELECT e FROM Exam e WHERE e.datum = :datum"),
     @NamedQuery(name = "Exam.findByDuration", query = "SELECT e FROM Exam e WHERE e.duration = :duration"),
     @NamedQuery(name = "Exam.findByFinish", query = "SELECT e FROM Exam e WHERE e.finish = :finish"),
     @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents"),
-    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.start = :start")})
+    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.beginn = :beginn")})
 public class Exam extends AbstractEntity {
 
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date day;
+    private Date datum;
 
     private Double duration;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date start;
+    private Time beginn;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date finish;
+    private Time finish;
     
     private Integer spaceforstudents;
 
@@ -54,20 +53,30 @@ public class Exam extends AbstractEntity {
 
     public Exam() {
     }
+
+    public Exam(Date day, Double duration, Time start, Time finish, Integer spaceforstudents) {
+        this.datum = day;
+        this.duration = duration;
+        this.beginn = start;
+        this.finish = finish;
+        this.spaceforstudents = spaceforstudents;
+    }
+    
+    
     
     public Date getStart() {
-        return start;
+        return beginn;
     }
 
-    public void setStart(Date start) {
-        this.start = start;
+    public void setStart(Time start) {
+        this.beginn = start;
     }
 
     public Date getFinish() {
         return finish;
     }
 
-    public void setFinish(Date finish) {
+    public void setFinish(Time finish) {
         this.finish = finish;
     }
 
@@ -80,11 +89,11 @@ public class Exam extends AbstractEntity {
     }
     
     public Date getDay() {
-        return day;
+        return datum;
     }
 
     public void setDay(Date day) {
-        this.day = day;
+        this.datum = day;
     }
 
     public Double getDuration() {
@@ -106,9 +115,9 @@ public class Exam extends AbstractEntity {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.day);
+        hash = 29 * hash + Objects.hashCode(this.datum);
         hash = 29 * hash + Objects.hashCode(this.duration);
-        hash = 29 * hash + Objects.hashCode(this.start);
+        hash = 29 * hash + Objects.hashCode(this.beginn);
         hash = 29 * hash + Objects.hashCode(this.finish);
         hash = 29 * hash + Objects.hashCode(this.spaceforstudents);
         hash = 29 * hash + Objects.hashCode(this.timeslotSet);
@@ -127,13 +136,13 @@ public class Exam extends AbstractEntity {
             return false;
         }
         final Exam other = (Exam) obj;
-        if (!Objects.equals(this.day, other.day)) {
+        if (!Objects.equals(this.datum, other.datum)) {
             return false;
         }
         if (!Objects.equals(this.duration, other.duration)) {
             return false;
         }
-        if (!Objects.equals(this.start, other.start)) {
+        if (!Objects.equals(this.beginn, other.beginn)) {
             return false;
         }
         if (!Objects.equals(this.finish, other.finish)) {
@@ -150,7 +159,7 @@ public class Exam extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Exam{" + "day=" + day + ", duration=" + duration + ", start=" + start + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", timeslotSet=" + timeslotSet + '}';
+        return "Exam{" + "day=" + datum + ", duration=" + duration + ", start=" + beginn + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", timeslotSet=" + timeslotSet + '}';
     }
   
 }

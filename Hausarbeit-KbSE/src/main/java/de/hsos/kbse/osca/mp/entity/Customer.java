@@ -53,6 +53,13 @@ public class Customer extends AbstractEntity {
     public Customer() {
     }
 
+    public Customer(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    
+    
     public Customer(String email, String firstname, String lastname, String login, String password, Integer type) {
         this.email = email;
         this.firstname = firstname;
