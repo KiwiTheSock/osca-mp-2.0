@@ -88,7 +88,8 @@ public class CalendarViewDozent implements Serializable {
     public void displayLogDate() {
         FacesMessage msg;
         if (getDate2() != null) {
-            msg = new FacesMessage("Bestätigt: ", "Tag " + getDate2() + " hinzugefügt");
+            
+            msg = new FacesMessage("Bestätigt: ", "Tag " + getDate2() + " hinzugefügt!");
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
