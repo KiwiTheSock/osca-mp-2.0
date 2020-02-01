@@ -27,10 +27,13 @@
                     <h3 style="font-family: Andale Mono, monospace; margin-bottom: 50px">Anlegen des Moduls zur muendlichen Pruefung</h3>
                 </p:row>
 
-                <p:tabView dynamic="ture" cache="true" effect="fold">
+                <p:tabView dynamic="true" cache="true" effect="fold">
 
                     <p:tab title="Modul">
                         <p:growl id="msgs" showDetail="true" />
+
+                        <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
+                        <p:spacer style="margin-top: 30px"/>
 
                         <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
@@ -39,15 +42,15 @@
                             <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="terms" value="#{dropdownViewDozent.term}" style="font-family: Andale Mono, monospace; font-size: 14px;">
                                 <f:selectItem itemLabel="Semester auswaehlen" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{dropdownViewDozent.convertListTerms}"/>
-                                <p:ajax update="display"/>
+                                <p:ajax update="display nextSep nextSpa"/>
                             </p:selectOneMenu>
 
                         </h:panelGrid>
 
-                        <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
-                        <p:spacer/>
-
                         <p:outputPanel style="margin-top: 10px" id="display">
+
+                            <p:separator id="nextSep" rendered="#{dropdownViewDozent.termExists}" style="margin-top: 30px; margin-bottom: 30px;border-color: #BCCBD0"/>
+                            <p:spacer id="nextSpa" rendered="#{dropdownViewDozent.termExists}"/>
 
                             <p:outputLabel rendered="#{dropdownViewDozent.termExists}" value="Name und Pruefung fuer Modul festlegen" style="font-family: Andale Mono, monospace"/>
 
