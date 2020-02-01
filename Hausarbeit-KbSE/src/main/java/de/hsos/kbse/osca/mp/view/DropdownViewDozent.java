@@ -417,15 +417,18 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     }
 
     /**
-     * Tag + Zeiten
-     * @param buttonCheck2 the buttonCheck2 to set
+     * Umrechnung der Zeiten fehlt
+     * Was benötigt wird um die Prüfung zu persistieren:
+     * @param duration
+     * @param getExamMin,
+     * @param getExamMax
+     * @param studentCount
+     * @param departmentID  this.dep
      */
     public void setButtonCheck2(boolean buttonCheck2) {
         this.buttonCheck2 = buttonCheck2;
         
         System.out.println("Tag+Zeit hinzufügen");
-        
-        //Umrechnung der Zeiten fehlt
         //this.ex = this.Exams.add(new Exam(duration, convertListExamMins, convertListExamMaxs, studentCount, day));
     }
 
