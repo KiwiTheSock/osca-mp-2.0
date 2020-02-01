@@ -60,26 +60,19 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = simpleDateFormat.parse(tag);
 
-        LocalTime st = LocalTime.parse(start); 
-        Time time = Time.valueOf( st );
-        
-        SimpleDateFormat startDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Date date1 = startDateFormat.parse("14-09-1992 " + start + ":00");
+        LocalTime st = LocalTime.parse(start);
+        Time time1 = Time.valueOf(st);
 
-        SimpleDateFormat endDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Date date2 = endDateFormat.parse("14-09-1992 " + finish + ":00");
+        LocalTime end = LocalTime.parse(start);
+        Time time2 = Time.valueOf(end);
 
-        System.out.println(date);
-        System.out.println(date1);
-        System.out.println(date2);
-                
-        Exam exam = new Exam(date, 20.3, time, time, 4);
+        Exam exam = new Exam(date, 20.3, time1, time2, 4);
         super.create(exam);
 //        try {
 //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
 //        } catch (Exception e) {
         return Response.status(200)
-                .entity("newEntity : " + exam.getDatum()+ " with " + exam.getDuration()
+                .entity("newEntity : " + exam.getDatum() + " with " + exam.getDuration()
                         + " and " + exam.getStart() + " and " + exam.getFinish()).build();
 //        }
 
