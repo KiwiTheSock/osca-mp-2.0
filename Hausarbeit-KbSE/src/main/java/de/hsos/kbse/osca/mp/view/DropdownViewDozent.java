@@ -116,7 +116,7 @@ public class DropdownViewDozent implements Serializable {
     public void displayLogNext() {
         FacesMessage msg;
         if (getExamMin() != null && getExamMax() != null) {
-            msg = new FacesMessage("Alles klar Chef!", " Alles weitergegeben ... ");
+            msg = new FacesMessage("Alles klar Chef!", " Alles weitergegeben ... " + getExamMin()+ "bis"+ getExamMax());
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Da ging was schief ...");
         }

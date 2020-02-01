@@ -100,13 +100,13 @@
 
                                 <p:outputLabel value="Pruefungszeitraum auswaehlen (Start): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMin}" id="min" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <p:selectOneMenu value="#{dropdownViewDozent.examMin}" id="min" style="font-family: Andale Mono, monospace; font-size: 14px;">
                                     <f:selectItems value="#{dropdownViewDozent.convertListExamMins}"/>
                                 </p:selectOneMenu>
 
                                 <p:outputLabel value="Pruefungszeitraum auswaehlen (Ende): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMax}" id="max" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <p:selectOneMenu value="#{dropdownViewDozent.examMax}" id="max" style="font-family: Andale Mono, monospace; font-size: 14px;">
                                     <f:selectItems value="#{dropdownViewDozent.convertListExamMaxs}"/>
                                 </p:selectOneMenu>
 
@@ -115,7 +115,6 @@
                                     <p:commandButton value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
                                                      action="#{calendarViewDozent.displayLogDate()}" 
                                                      style="font-family: Andale Mono, monospace; font-size: 15px"
-                                                     disabled="#{dropdownViewDozent.buttonCheck2}"
                                                      icon="pi pi-save"
                                                      id="butt"
                                                      update="msgs popup">
@@ -124,7 +123,6 @@
                                     <p:commandButton value="Logout" rendered="#{dropdownViewDozent.buttonCheck}" 
                                                      action="#{dropdownViewDozent.displayLogNext()}"  
                                                      style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 20px; color: red"
-                                                     disabled="#{dropdownViewDozent.buttonCheck2}"
                                                      icon="pi pi-sign-out"
                                                      id="next">
                                         <f:actionListener binding="#{dropdownViewDozent.redirect('load.xhtml')}"/>
