@@ -79,7 +79,7 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
 //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
 //        } catch (Exception e) {
         return Response.status(200)
-                .entity("newEntity : " + exam.getDay() + " with " + exam.getDuration()
+                .entity("newEntity : " + exam.getDatum()+ " with " + exam.getDuration()
                         + " and " + exam.getStart() + " and " + exam.getFinish()).build();
 //        }
 

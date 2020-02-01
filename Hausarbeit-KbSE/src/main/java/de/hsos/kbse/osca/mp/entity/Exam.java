@@ -96,22 +96,6 @@ public class Exam extends AbstractEntity {
         this.timeslotSet = timeslotSet;
     }
 
-    public Date getDay() {
-<<<<<<< HEAD
-        return datum;
-    }
-
-    public void setDay(Date day) {
-        this.datum = day;
-=======
-        return _day;
-    }
-
-    public void setDay(Date _day) {
-        this._day = _day;
->>>>>>> 4f710d549911b88a8e69509628d7efdc4a86ae8c
-    }
-
     public Double getDuration() {
         return duration;
     }
@@ -128,21 +112,32 @@ public class Exam extends AbstractEntity {
         this.spaceforstudents = spaceforstudents;
     }
 
+    public Date getDatum() {
+        return datum;
+    }
+
+    public void setDatum(Date datum) {
+        this.datum = datum;
+    }
+
+    public Time getBeginn() {
+        return beginn;
+    }
+
+    public void setBeginn(Time beginn) {
+        this.beginn = beginn;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-<<<<<<< HEAD
-        hash = 29 * hash + Objects.hashCode(this.datum);
-        hash = 29 * hash + Objects.hashCode(this.duration);
-        hash = 29 * hash + Objects.hashCode(this.beginn);
-=======
-        hash = 29 * hash + Objects.hashCode(this._day);
-        hash = 29 * hash + Objects.hashCode(this.duration);
-        hash = 29 * hash + Objects.hashCode(this._start);
->>>>>>> 4f710d549911b88a8e69509628d7efdc4a86ae8c
-        hash = 29 * hash + Objects.hashCode(this.finish);
-        hash = 29 * hash + Objects.hashCode(this.spaceforstudents);
-        hash = 29 * hash + Objects.hashCode(this.timeslotSet);
+        hash = 19 * hash + Objects.hashCode(this.datum);
+        hash = 19 * hash + Objects.hashCode(this.duration);
+        hash = 19 * hash + Objects.hashCode(this.beginn);
+        hash = 19 * hash + Objects.hashCode(this.finish);
+        hash = 19 * hash + Objects.hashCode(this.spaceforstudents);
+        hash = 19 * hash + Objects.hashCode(this.department);
+        hash = 19 * hash + Objects.hashCode(this.timeslotSet);
         return hash;
     }
 
@@ -158,27 +153,22 @@ public class Exam extends AbstractEntity {
             return false;
         }
         final Exam other = (Exam) obj;
-<<<<<<< HEAD
         if (!Objects.equals(this.datum, other.datum)) {
-=======
-        if (!Objects.equals(this._day, other._day)) {
->>>>>>> 4f710d549911b88a8e69509628d7efdc4a86ae8c
             return false;
         }
         if (!Objects.equals(this.duration, other.duration)) {
             return false;
         }
-<<<<<<< HEAD
         if (!Objects.equals(this.beginn, other.beginn)) {
-=======
-        if (!Objects.equals(this._start, other._start)) {
->>>>>>> 4f710d549911b88a8e69509628d7efdc4a86ae8c
             return false;
         }
         if (!Objects.equals(this.finish, other.finish)) {
             return false;
         }
         if (!Objects.equals(this.spaceforstudents, other.spaceforstudents)) {
+            return false;
+        }
+        if (!Objects.equals(this.department, other.department)) {
             return false;
         }
         if (!Objects.equals(this.timeslotSet, other.timeslotSet)) {
@@ -189,11 +179,8 @@ public class Exam extends AbstractEntity {
 
     @Override
     public String toString() {
-<<<<<<< HEAD
-        return "Exam{" + "day=" + datum + ", duration=" + duration + ", start=" + beginn + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", timeslotSet=" + timeslotSet + '}';
-=======
-        return "Exam{" + "day=" + _day + ", duration=" + duration + ", start=" + _start + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", timeslotSet=" + timeslotSet + '}';
->>>>>>> 4f710d549911b88a8e69509628d7efdc4a86ae8c
+        return "Exam{" + "datum=" + datum + ", duration=" + duration + ", beginn=" + beginn + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", department=" + department + ", timeslotSet=" + timeslotSet + '}';
     }
-
+    
+    
 }
