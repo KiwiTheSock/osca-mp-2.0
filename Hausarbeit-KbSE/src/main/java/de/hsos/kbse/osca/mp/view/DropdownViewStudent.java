@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.oscar.mp.view;
+package de.hsos.kbse.osca.mp.view;
 
+import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,29 +21,26 @@ import javax.inject.Named;
  */
 @Named
 @ViewScoped
-public class DropdownViewStudent implements Serializable {
+public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
 
     private Map<String, Map<String, String>> modulDay = new HashMap<String, Map<String, String>>();
     private Map<String, Map<String, String>> dayTime = new HashMap<String, Map<String, String>>();
-    private String student;
     private String modul;
     private String day;
     private String time;
     private Map<String, String> moduls = new HashMap<>();
     private Map<String, String> days = new HashMap<>();
-    private Map<String, String> students = new HashMap<>();
     private Map<String, String> times = new HashMap<>();
 
     @PostConstruct
     public void init() {
         setModuls(new HashMap<>());
         setTimes(new HashMap<>());
-        setStudents(new HashMap<>());
-        
-        getStudents().put("Stud Test", "Stud Test");
-        getStudents().put("Stud TestDos", "Stud TestDos");
-        getStudents().put("Stud TestTres", "Stud TestTres");
 
+        //httpSessionManager?
+        //this.Customers.findById(0)
+        
+        
         getModuls().put("Mathe1", "Mathe 1");
         getModuls().put("KBSE", "KBSE");
         getModuls().put("OOAD", "OOAD");
@@ -101,7 +99,7 @@ public class DropdownViewStudent implements Serializable {
         if (getModul() != null && !modul.equals("")) {
             setDays(getModulDay().get(getModul()));
         } else {
-            setDays(new HashMap<String, String>());
+            setDays(new HashMap<>());
         }
     }
 
@@ -177,34 +175,6 @@ public class DropdownViewStudent implements Serializable {
      */
     public void setDayTime(Map<String, Map<String, String>> dayTime) {
         this.dayTime = dayTime;
-    }
-
-    /**
-     * @return the student
-     */
-    public String getStudent() {
-        return student;
-    }
-
-    /**
-     * @param student the student to set
-     */
-    public void setStudent(String student) {
-        this.student = student;
-    }
-
-    /**
-     * @return the students
-     */
-    public Map<String, String> getStudents() {
-        return students;
-    }
-
-    /**
-     * @param students the students to set
-     */
-    public void setStudents(Map<String, String> students) {
-        this.students = students;
     }
 
 }

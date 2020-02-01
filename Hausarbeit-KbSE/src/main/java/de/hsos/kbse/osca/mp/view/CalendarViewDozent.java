@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.oscar.mp.view;
+package de.hsos.kbse.osca.mp.view;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import logger.interceptorbinding.LevelEnum;
-import logger.interceptorbinding.Logable;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 
 /**
  *
@@ -92,7 +92,7 @@ public class CalendarViewDozent implements Serializable {
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-
+        System.out.println("DatetimeDE: "+getDateTimeDe());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     

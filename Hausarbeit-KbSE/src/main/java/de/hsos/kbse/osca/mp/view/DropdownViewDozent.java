@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.oscar.mp.view;
+package de.hsos.kbse.osca.mp.view;
 
-import java.io.IOException;
+import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
+import de.hsos.kbse.osca.mp.entity.Department;
+import de.hsos.kbse.osca.mp.entity.Exam;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,13 +16,11 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.FacesComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import logger.interceptorbinding.LevelEnum;
-import logger.interceptorbinding.Logable;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 
 /**
  *
@@ -28,8 +28,10 @@ import logger.interceptorbinding.Logable;
  */
 @Named
 @ViewScoped
-public class DropdownViewDozent implements Serializable {
+public class DropdownViewDozent extends AbstractRepoAccesor implements Serializable {
 
+    private Department dep;
+    private Exam ex;
     private Map<String, String> terms = new HashMap<>();
     private Map<String, Integer> durations = new HashMap<>();
     private Map<String, Integer> studentCounts = new HashMap<>();
@@ -50,11 +52,10 @@ public class DropdownViewDozent implements Serializable {
     private boolean termExists = false;
     private boolean buttonCheck = false;
     private boolean buttonCheck2 = false;
-    private boolean checkIsStudent = false;
 
     @PostConstruct
     public void init() {
-        getTerms().put("Semester1", "WiSe 17/18");
+        getTerms().put("Semester1", "WiSe 17/18"); //Anstatt WiSe/SoSe nur Zahlen?
         getTerms().put("Semester2", "SoSe 18");
         getTerms().put("Semester3", "WiSe 18/19");
         getTerms().put("Semester4", "SoSe 19");
@@ -112,30 +113,24 @@ public class DropdownViewDozent implements Serializable {
 
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-
+                
     public void displayLogNext() {
+        System.out.println("MIN:"+getExamMin());
+        System.out.println("MAX:"+getExamMax());
         FacesMessage msg;
         if (getExamMin() != null && getExamMax() != null) {
-            msg = new FacesMessage("Alles klar Chef!", " Alles weitergegeben ... ");
+            msg = new FacesMessage("Alles klar diigi", " Hab ich eingereicht ");
         } else {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Da ging was schief ...");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Parameter nicht ausgewaehlt.");
         }
+
         FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-    @Logable(logLevel = LevelEnum.INFO)
-    public void redirect(String red) throws IOException{
-        System.out.println("War hier Brudi");
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        if(checkIsStudent == true){
-         context.redirect(red);   
-        } else {
-            context.redirect(red);
-        }
     }
 
     /**
      * @return the terms
      */
+
     public Map<String, String> getTerms() {
         return terms;
     }
@@ -307,8 +302,11 @@ public class DropdownViewDozent implements Serializable {
      */
     @Logable(logLevel = LevelEnum.INFO)
     public void setButtonCheck(boolean buttonCheck) {
-        System.out.println("CHECK");
+        System.out.println("CHECK\n");
+        System.out.println("Dauer: "+getDuration()+"\nAnzahl: "+getStudentCount());
+        this.dep = this.Departments.add(new Department(this.modulName, this.term));
         this.buttonCheck = buttonCheck;
+        
     }
 
     /**
@@ -419,24 +417,19 @@ public class DropdownViewDozent implements Serializable {
     }
 
     /**
-     * @param buttonCheck2 the buttonCheck2 to set
+     * Umrechnung der Zeiten fehlt
+     * Was benötigt wird um die Prüfung zu persistieren:
+     * @param duration
+     * @param getExamMin,
+     * @param getExamMax
+     * @param studentCount
+     * @param departmentID  this.dep
      */
     public void setButtonCheck2(boolean buttonCheck2) {
         this.buttonCheck2 = buttonCheck2;
-    }
-
-    /**
-     * @return the checkIsStudent
-     */
-    public boolean isCheckIsStudent() {
-        return checkIsStudent;
-    }
-
-    /**
-     * @param checkIsStudent the checkIsStudent to set
-     */
-    public void setCheckIsStudent(boolean checkIsStudent) {
-        this.checkIsStudent = checkIsStudent;
+        
+        System.out.println("Tag+Zeit hinzufügen");
+        //this.ex = this.Exams.add(new Exam(duration, convertListExamMins, convertListExamMaxs, studentCount, day));
     }
 
 }

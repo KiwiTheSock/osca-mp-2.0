@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
+<!-- Modulanmeldung -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
@@ -9,143 +10,136 @@
         <title> Osca-MP-Anmeldung </title>        
     </h:head>  
 
-    <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
-
     <h:body style="background-image: url('data/blurred.jpg'); background-repeat: no-repeat; background-size: cover">
+        <style type="text/css">
+            .green-button.ui-button.ui-state-default {
+                background-color: #5cb85c;
+                border-color: #5cb85c;
+                color: #fff;
+            }
 
+            .green-button.ui-button.ui-state-default:enabled:hover, 
+            .green-button.ui-button.ui-state-default:focus {
+                background-color: #4cae4c;
+                border-color: #5cb85c;
+            }
+
+            .red-button.ui-button.ui-state-default {
+                background-color: #d9534f;
+                border-color: #d9534f;
+                color: #fff;
+            }
+
+            .red-button.ui-button.ui-state-default:enabled:hover, 
+            .red-button.ui-button.ui-state-default:focus {
+                background-color: #d43f3a;
+                border-color: #d9534f;
+            }
+
+        </style>
+        <!-- LOGO -->
         <div style="text-align: center">
             <img height="30%" width="30%" src="data/Logo.png" alt="Hier sollte eigentlich ein Bild sein ..." onclick="location.href = 'load.xhtml'"></img>
         </div>
-
+        <!-- LOGIN DIV/BORDER -->
         <div style="background-color:#FFFFFF; margin:30px; text-align: center; border-left: 6px solid #BCCBD0; border-top: 6px solid #BCCBD0" >
-
             <h:form style="text-align: left;padding: 45px;" id="form">
-
-
+                <p:growl id="msgs" showDetail="true" />
 
                 <p:row>
                     <h3 style="font-family: Andale Mono, monospace; margin-bottom: 50px">Anlegen des Moduls zur muendlichen Pruefung</h3>
                 </p:row>
+                <!-- ANLEGEN -->
+                <p:row>
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
-                <p:tabView dynamic="ture" cache="true" effect="fold">
+                        <p:outputLabel for="terms" value="Semester: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                        <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="terms" value="#{dropdownViewDozent.term}" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                            <f:selectItem itemLabel="Semester auswaehlen" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{dropdownViewDozent.convertListTerms}"/>
+                            <p:ajax update="display"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
 
-                    <p:tab title="Modul">
-                        <p:growl id="msgs" showDetail="true" />
+                    <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
+                    <p:spacer/>
 
-                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputPanel style="margin-top: 10px" id="display">
+                        <p:outputLabel rendered="#{dropdownViewDozent.termExists}" value="Name und Pruefung fuer Modul festlegen" style="font-family: Andale Mono, monospace"/>
+                        <h:panelGrid rendered="#{dropdownViewDozent.termExists}" columns="2" style="margin-top:50px" cellpadding="5">
 
-                            <p:outputLabel for="terms" value="Semester: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:outputLabel for="modulName" value="Modulname: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:inputText disabled="#{dropdownViewDozent.buttonCheck}" value="#{dropdownViewDozent.modulName}" id="modulName" placeholder="Name" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
-                            <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="terms" value="#{dropdownViewDozent.term}" style="font-family: Andale Mono, monospace; font-size: 14px;">
-                                <f:selectItem itemLabel="Semester auswaehlen" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{dropdownViewDozent.convertListTerms}"/>
-                                <p:ajax update="display"/>
+                            <p:outputLabel for="duration" value="Pruefungsdauer (Min): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="duration" value="#{dropdownViewDozent.duration}" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <f:selectItems value="#{dropdownViewDozent.convertListDurations}"/>
                             </p:selectOneMenu>
+
+                            <p:outputLabel for="studentCount" value="Anzahl der Studierenden (x): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="studentCount" value="#{dropdownViewDozent.studentCount}" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <f:selectItems value="#{dropdownViewDozent.convertListStudentCounts}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton update="msgs display terms setDays" value="Bestaetigen" disabled="#{dropdownViewDozent.buttonCheck}" 
+                                             action="#{dropdownViewDozent.displayLog}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 12px; margin-top: 30px"
+                                             styleClass="green-button">
+                                <f:actionListener binding="#{dropdownViewDozent.setButtonCheck(true)}"/>
+                            </p:commandButton>
+                            <p:spacer />
+                        </h:panelGrid>
+
+                        <p:separator id="seperatorChecked" rendered="#{dropdownViewDozent.buttonCheck}" style="margin-top: 30px; margin-bottom: 30px; border-color: #BCCBD0"/>
+                        <p:spacer rendered="#{dropdownViewDozent.buttonCheck}" id="spacerChecked"/>
+
+                        <p:outputLabel id="setDays" rendered="#{dropdownViewDozent.buttonCheck}" value="Tage und Zeiten festlegen" style="font-family: Andale Mono, monospace;"/>
+                        <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
+                            <p:outputLabel for="popup" value="Termine hinzufuegen:" style="font-family: Andale Mono, monospace; font-size: 14px"/>
+
+                            <p:datePicker disabled="#{dropdownViewDozent.buttonCheck2}" id="popup" value="#{calendarViewDozent.date2}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                         </h:panelGrid>
 
-                        <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
-                        <p:spacer/>
-
-                        <p:outputPanel style="margin-top: 10px" id="display">
-
-                            <p:outputLabel rendered="#{dropdownViewDozent.termExists}" value="Name und Pruefung fuer Modul festlegen" style="font-family: Andale Mono, monospace"/>
-
-                            <h:panelGrid rendered="#{dropdownViewDozent.termExists}" columns="2" style="margin-top:50px" cellpadding="5">
-
-                                <p:outputLabel for="modulName" value="Modulname: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:inputText disabled="#{dropdownViewDozent.buttonCheck}" value="#{dropdownViewDozent.modulName}" id="modulName" placeholder="Name" style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:outputLabel for="duration" value="Pruefungsdauer (Min): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="duration" value="#{dropdownViewDozent.duration}" style="font-family: Andale Mono, monospace; font-size: 14px;">
-                                    <f:selectItems value="#{dropdownViewDozent.convertListDurations}"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel for="studentCount" value="Anzahl der Studierenden (x): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="studentCount" value="#{dropdownViewDozent.studentCount}" style="font-family: Andale Mono, monospace; font-size: 14px;">
-                                    <f:selectItems value="#{dropdownViewDozent.convertListStudentCounts}"/>
-                                </p:selectOneMenu>
-
-                                <p:commandButton update="msgs display terms setDays" value="Bestaetigen" disabled="#{dropdownViewDozent.buttonCheck}" 
-                                                 action="#{dropdownViewDozent.displayLog}" 
-                                                 style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 30px"
-                                                 icon="pi pi-caret-down">
-
-                                    <f:actionListener binding="#{dropdownViewDozent.setButtonCheck(true)}"/>
-
+                        <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
+                            <p:outputLabel value="Pruefungszeitraum auswaehlen (Start): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMin}" id="min" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <f:selectItems value="#{dropdownViewDozent.convertListExamMins}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Pruefungszeitraum auswaehlen (Ende): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMax}" id="max" style="font-family: Andale Mono, monospace; font-size: 14px;">
+                                <f:selectItems value="#{dropdownViewDozent.convertListExamMaxs}"/>
+                            </p:selectOneMenu>
+                            <h:panelGrid>
+                                <p:commandButton styleClass="green-button" value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
+                                                 action="#{calendarViewDozent.displayLogDate()}" 
+                                                 style="font-family: Andale Mono, monospace; font-size: 12px"
+                                                 disabled="#{dropdownViewDozent.buttonCheck2}"
+                                                 id="butt"
+                                                 update="msgs popup">
                                 </p:commandButton>
-                                <p:spacer />
 
+                                <p:commandButton styleClass="red-button" value="Weiter" rendered="#{dropdownViewDozent.buttonCheck}" 
+                                                 action="#{dropdownViewDozent.displayLogNext()}"  
+                                                 style="font-family: Andale Mono, monospace; font-size: 12px; margin-top: 10px"
+                                                 disabled="#{dropdownViewDozent.buttonCheck2}"
+                                                 id="next"
+                                                 update="msgs popup min max butt next display studentSeparator studentSpacer">
+                                    <f:actionListener binding="#{dropdownViewDozent.setButtonCheck2(true)}"/>
+                                </p:commandButton>
                             </h:panelGrid>
 
-                            <p:separator id="seperatorChecked" rendered="#{dropdownViewDozent.buttonCheck}" style="margin-top: 30px; margin-bottom: 30px; border-color: #BCCBD0"/>
-                            <p:spacer rendered="#{dropdownViewDozent.buttonCheck}" id="spacerChecked"/>
+                        </h:panelGrid>
 
-                            <p:outputLabel id="setDays" rendered="#{dropdownViewDozent.buttonCheck}" value="Tage und Zeiten festlegen" style="font-family: Andale Mono, monospace;"/>
 
-                            <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
 
-                                <p:outputLabel for="popup" value="Termine hinzufuegen:" style="font-family: Andale Mono, monospace; font-size: 14px"/>
-                                <p:datePicker disabled="#{dropdownViewDozent.buttonCheck2}" id="popup" value="#{calendarViewDozent.date2}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
-                            </h:panelGrid>
+                        <p:separator id="studentSeparator" rendered="#{dropdownViewDozent.buttonCheck2}" style="margin-top: 30px; border-color: #BCCBD0"/>
+                        <p:spacer id="studentSpacer" rendered="#{dropdownViewDozent.buttonCheck2}" style="margin-top: 30px"/>
+                        <p:outputLabel id="setStudents" rendered="#{dropdownViewDozent.buttonCheck2}" value="Studenten/innen einer Prüfung zuweisen" style="font-family: Andale Mono, monospace;"/>
 
-                            <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
-
-                                <p:outputLabel value="Pruefungszeitraum auswaehlen (Start): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMin}" id="min" style="font-family: Andale Mono, monospace; font-size: 14px;">
-                                    <f:selectItems value="#{dropdownViewDozent.convertListExamMins}"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Pruefungszeitraum auswaehlen (Ende): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
-                                <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMax}" id="max" style="font-family: Andale Mono, monospace; font-size: 14px;">
-                                    <f:selectItems value="#{dropdownViewDozent.convertListExamMaxs}"/>
-                                </p:selectOneMenu>
-
-                                <h:panelGrid>
-
-                                    <p:commandButton value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                                     action="#{calendarViewDozent.displayLogDate()}" 
-                                                     style="font-family: Andale Mono, monospace; font-size: 15px"
-                                                     disabled="#{dropdownViewDozent.buttonCheck2}"
-                                                     icon="pi pi-save"
-                                                     id="butt"
-                                                     update="msgs popup">
-                                    </p:commandButton>
-
-                                    <p:commandButton value="Logout" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                                     action="#{dropdownViewDozent.displayLogNext()}"  
-                                                     style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 20px; color: red"
-                                                     disabled="#{dropdownViewDozent.buttonCheck2}"
-                                                     icon="pi pi-sign-out"
-                                                     id="next">
-                                        <f:actionListener binding="#{dropdownViewDozent.redirect('load.xhtml')}"/>
-                                    </p:commandButton>
-
-                                </h:panelGrid>
-
-                            </h:panelGrid>
-
-                        </p:outputPanel>
-                    </p:tab>
-
-                    <p:tab title="Studenten hinzufügen">
-                        <p:growl id="msgs2" showDetail="true" />
-
-                        <p:separator id="studentSeparator" style="margin-top: 30px; border-color: #BCCBD0"/>
-                        <p:spacer id="studentSpacer" style="margin-top: 30px"/>
-
-                        <p:outputLabel id="setStudents" value="Studenten/innen einer Prüfung zuweisen" style="font-family: Andale Mono, monospace;"/>
-
-                        <h:panelGrid columns="2" style="margin-top:50px" cellpadding="5">
-
+                        <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck2}" columns="2" style="margin-top:50px" cellpadding="5">
                             <p:outputLabel for="students" value="Studenten/innen: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
                             <p:selectOneMenu id="students" value="#{dropdownViewStudent.student}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                                 <p:ajax update="students"/>
                                 <f:selectItem itemLabel="Student/innen auswählen" itemValue="" noSelectionOption="true" />
@@ -153,7 +147,6 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel for="moduls" value="Module: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
                             <p:selectOneMenu id="moduls" value="#{dropdownViewStudent.modul}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                                 <p:ajax update="moduls"/>
                                 <f:selectItem itemLabel="Modul auswaehlen" itemValue="" noSelectionOption="true" />
@@ -161,7 +154,6 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel for="day" value="Tag: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
                             <p:selectOneMenu id="day" value="#{dropdownViewStudent.day}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                                 <f:selectItem itemLabel="Zeit auswaehlen" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{dropdownViewStudent.days}" />
@@ -169,30 +161,21 @@
                             </p:selectOneMenu>
 
                             <p:outputLabel for="time" value="Zeit: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-
                             <p:selectOneMenu id="time" value="#{dropdownViewStudent.time}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                                 <f:selectItem itemLabel="Zeit auswaehlen" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{dropdownViewStudent.times}" />
                                 <p:ajax update="time"/>
                             </p:selectOneMenu>
 
-                        </h:panelGrid>
-
-                        <h:panelGrid columns="1" style="margin-top:50px" cellpadding="5">
-                            <p:commandButton value="Bestaetigen" update="msgs2" action="#{dropdownViewStudent.displayLog}" 
-                                             style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 30px"
-                                             icon="pi pi-save">
+                            <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.displayLog}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 12px; margin-top: 30px"
+                                             styleClass="green-button">
                             </p:commandButton>
-
-                            <p:commandButton value="Logout" 
-                                             style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 10px; color: red"
-                                             icon="pi pi-sign-out"
-                                             action="load">
-                            </p:commandButton>                            
                         </h:panelGrid>
 
-                    </p:tab>
-                </p:tabView>
+                    </p:outputPanel>
+
+                </p:row>
             </h:form>
         </div>                
     </h:body>
