@@ -9,17 +9,17 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Philipp
  */
 @Named
-@SessionScoped
+@RequestScoped
 public class LoginQuery extends AbstractRepoAccesor implements Serializable {
 
     boolean loggedIn;
@@ -45,7 +45,9 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    //Login dozent + student Verbinden
+    
     //Customer customer = new Customer();
     public String login() {
 
@@ -53,7 +55,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
         //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         this.cust = Customers.getByLogin(this.username);
-        if (this.cust == null | !cust.getStudentPassword().equals(this.password)) {
+        if (this.cust == null | !cust.getPassword().equals(this.password)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
             return null;
         } else {
@@ -61,15 +63,13 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             this.loggedIn = true;
             this.accountId = this.cust.getId();
 
-            /*
-        SessionHandler wird wofür benötigt? 
-        try {
-        HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        SessionHandler.put(accountId, sessionObj);
-        
-        } catch (Exeption ex) {
-        
-        }*/
+            try {
+                HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+                SessionHandler.store(accountId, sessionObj);
+            } catch (Exception ex) {
+                System.out.println("HTTPSession went wrong");
+            }
+
             return "modulAuswahlStudent.xhtml?faces-redirect=true";
         }
     }
@@ -80,19 +80,33 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
         //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         this.cust = Customers.getByLogin(this.username);
-        if (this.cust == null | !cust.getStudentPassword().equals(this.password)) {
+        if (this.cust == null | !cust.getPassword().equals(this.password)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
             return null;
         } else {
 
-            if(this.cust.getAccountType()==1) {
+            if (this.cust.getType() == 1) {
                 this.loggedIn = true;
                 this.accountId = this.cust.getId();
                 return "modulAnlegenDozent.xhtml?faces-redirect=true";
             }
-
+            //Alternativ Route? 
             return null;
         }
+    }
+
+    public String logout() {
+        System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.logout()");
+        //System.out.println("1 Username: " + this.username + " Password: " + this.password);
+
+        if (this.loggedIn == true) {
+            System.out.println("Inside: logout()");
+            this.loggedIn = true;
+            this.accountId = this.cust.getId();
+            return "login.xhtml?faces-redirect=true";
+        }
+        //Alternativ Route? 
+        return null;
     }
 
 }

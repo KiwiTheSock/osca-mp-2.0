@@ -114,10 +114,12 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
                 
-    public void displayLogExam() {
+    public void displayLogNext() {
+        System.out.println("MIN:"+getExamMin());
+        System.out.println("MAX:"+getExamMax());
         FacesMessage msg;
         if (getExamMin() != null && getExamMax() != null) {
-            msg = new FacesMessage("Pruefungszeitraum bestaetigt: ", " Von " + getExamMin() + " bis " + getExamMax() + " Uhr."+"\nRechnung: HIER");
+            msg = new FacesMessage("Alles klar diigi", " Hab ich eingereicht ");
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Parameter nicht ausgewaehlt.");
         }
@@ -300,8 +302,9 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
      */
     @Logable(logLevel = LevelEnum.INFO)
     public void setButtonCheck(boolean buttonCheck) {
-        System.out.println("CHECK");
-       this.dep = this.Departments.add(new Department(this.modulName, this.term));
+        System.out.println("CHECK\n");
+        System.out.println("Dauer: "+getDuration()+"\nAnzahl: "+getStudentCount());
+        this.dep = this.Departments.add(new Department(this.modulName, this.term));
         this.buttonCheck = buttonCheck;
         
     }
@@ -414,11 +417,18 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     }
 
     /**
-     * Tag + Zeiten
-     * @param buttonCheck2 the buttonCheck2 to set
+     * Umrechnung der Zeiten fehlt
+     * Was benötigt wird um die Prüfung zu persistieren:
+     * @param duration
+     * @param getExamMin,
+     * @param getExamMax
+     * @param studentCount
+     * @param departmentID  this.dep
      */
     public void setButtonCheck2(boolean buttonCheck2) {
         this.buttonCheck2 = buttonCheck2;
+        
+        System.out.println("Tag+Zeit hinzufügen");
         //this.ex = this.Exams.add(new Exam(duration, convertListExamMins, convertListExamMaxs, studentCount, day));
     }
 

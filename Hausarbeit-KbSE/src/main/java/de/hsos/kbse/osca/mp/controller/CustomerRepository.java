@@ -7,7 +7,9 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepository;
 import de.hsos.kbse.osca.mp.entity.Customer;
-import javax.ejb.Stateless;
+import java.util.List;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -15,16 +17,25 @@ import javax.ejb.Stateless;
  *
  * @author Philipp
  */
-@Stateless
+@RequestScoped
 public class CustomerRepository extends AbstractRepository<Customer> {
 
     public CustomerRepository() {
+        this.entityClass = Customer.class;
     }
-    
+
     public Customer getByLogin(String login) {
-        
         System.out.print("SQL: get " + login);
-        return query("select e from #table e where e.studentLogin = :login").put("login", login).one();
-        
+        TypedQuery<Customer> query;
+        query = this.em.createNamedQuery("Customer.findByLogin", Customer.class);
+        return query.setParameter("login", login).getSingleResult();
+
+    }
+
+    public List<Customer> getAll() {
+        System.out.print("SQL: getAll()");
+        TypedQuery<Customer> query;
+        query = this.em.createNamedQuery("Customer.findAll", Customer.class);
+        return query.getResultList();
     }
 }

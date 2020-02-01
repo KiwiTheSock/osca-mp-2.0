@@ -98,16 +98,8 @@
                             <p:outputLabel for="popup" value="Termine hinzufuegen:" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                             <p:datePicker disabled="#{dropdownViewDozent.buttonCheck2}" id="popup" value="#{calendarViewDozent.date2}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
-                            <p:commandButton styleClass="green-button" value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                             action="#{calendarViewDozent.displayLogDate()}" 
-                                             style="font-family: Andale Mono, monospace; font-size: 12px"
-                                             disabled="#{dropdownViewDozent.buttonCheck2}"
-                                             id="butt">
-                            </p:commandButton>
 
                         </h:panelGrid>
-
-                        <!-- Zeit auswaehlen: Konvertierungsfehler -->
 
                         <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
                             <p:outputLabel value="Pruefungszeitraum auswaehlen (Start): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
@@ -118,15 +110,69 @@
                             <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck2}" value="#{dropdownViewDozent.examMax}" id="max" style="font-family: Andale Mono, monospace; font-size: 14px;">
                                 <f:selectItems value="#{dropdownViewDozent.convertListExamMaxs}"/>
                             </p:selectOneMenu>
+                            <h:panelGrid>
+                                <p:commandButton styleClass="green-button" value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
+                                                 action="#{calendarViewDozent.displayLogDate()}" 
+                                                 style="font-family: Andale Mono, monospace; font-size: 12px"
+                                                 disabled="#{dropdownViewDozent.buttonCheck2}"
+                                                 id="butt"
+                                                 update="msgs popup">
+                                </p:commandButton>
 
-                            <p:commandButton disabled="#{dropdownViewDozent.buttonCheck2}"
-                                             styleClass="green-button" value="Set" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                             action="#{dropdownViewDozent.displayLogExam()}" 
-                                             style="font-family: Andale Mono, monospace; font-size: 12px"
-                                             id="set">
-                                <f:actionListener binding="#{dropdownViewDozent.setButtonCheck2(true)}"/>
+                                <p:commandButton styleClass="red-button" value="Weiter" rendered="#{dropdownViewDozent.buttonCheck}" 
+                                                 action="#{dropdownViewDozent.displayLogNext()}"  
+                                                 style="font-family: Andale Mono, monospace; font-size: 12px; margin-top: 10px"
+                                                 disabled="#{dropdownViewDozent.buttonCheck2}"
+                                                 id="next"
+                                                 update="msgs popup min max butt next display studentSeparator studentSpacer">
+                                    <f:actionListener binding="#{dropdownViewDozent.setButtonCheck2(true)}"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+
+
+
+
+                        <p:separator id="studentSeparator" rendered="#{dropdownViewDozent.buttonCheck2}" style="margin-top: 30px; border-color: #BCCBD0"/>
+                        <p:spacer id="studentSpacer" rendered="#{dropdownViewDozent.buttonCheck2}" style="margin-top: 30px"/>
+                        <p:outputLabel id="setStudents" rendered="#{dropdownViewDozent.buttonCheck2}" value="Studenten/innen einer Prüfung zuweisen" style="font-family: Andale Mono, monospace;"/>
+
+                        <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck2}" columns="2" style="margin-top:50px" cellpadding="5">
+                            <p:outputLabel for="students" value="Studenten/innen: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu id="students" value="#{dropdownViewStudent.student}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
+                                <p:ajax update="students"/>
+                                <f:selectItem itemLabel="Student/innen auswählen" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{dropdownViewStudent.students}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="moduls" value="Module: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu id="moduls" value="#{dropdownViewStudent.modul}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
+                                <p:ajax update="moduls"/>
+                                <f:selectItem itemLabel="Modul auswaehlen" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{dropdownViewStudent.moduls}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="day" value="Tag: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu id="day" value="#{dropdownViewStudent.day}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
+                                <f:selectItem itemLabel="Zeit auswaehlen" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{dropdownViewStudent.days}" />
+                                <p:ajax update="day"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="time" value="Zeit: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                            <p:selectOneMenu id="time" value="#{dropdownViewStudent.time}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
+                                <f:selectItem itemLabel="Zeit auswaehlen" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{dropdownViewStudent.times}" />
+                                <p:ajax update="time"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.displayLog}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 12px; margin-top: 30px"
+                                             styleClass="green-button">
                             </p:commandButton>
                         </h:panelGrid>
+
                     </p:outputPanel>
 
                 </p:row>

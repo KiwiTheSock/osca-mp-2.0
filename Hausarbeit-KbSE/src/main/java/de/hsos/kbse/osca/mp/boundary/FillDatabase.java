@@ -22,14 +22,9 @@ import javax.inject.Singleton;
 public class FillDatabase extends AbstractRepoAccesor {
 
     @PostConstruct
-    void init() {
+    public void fill() {
         Locale.setDefault(Locale.GERMANY);
         System.out.println("Outside IF!\n");
-
-        //Check if database is filled
-        /*        if(query()) {
-        
-        }*/
         
         if (Customers.getAll().isEmpty()) {
             

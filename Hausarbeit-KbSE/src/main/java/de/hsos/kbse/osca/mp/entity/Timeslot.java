@@ -6,44 +6,41 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
-import java.sql.Time;
 import java.util.Objects;
-import javax.enterprise.inject.Vetoed;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Philipp
+ * @author nordm
  */
 @Entity
-@Vetoed
-@Table(name = "TimeSlot")
-public class TimeSlot extends AbstractEntity {
+@Table(name = "TIMESLOT")
+@NamedQueries({
+    @NamedQuery(name = "Timeslot.findAll", query = "SELECT t FROM Timeslot t"),
+    @NamedQuery(name = "Timeslot.findById", query = "SELECT t FROM Timeslot t WHERE t.id = :id"),
+    @NamedQuery(name = "Timeslot.findBySlot", query = "SELECT t FROM Timeslot t WHERE t.slot = :slot")})
+public class Timeslot extends AbstractEntity {
 
-    private float slot;
+    private Integer slot;
 
-    public TimeSlot() {
+    public Timeslot() {
     }
 
-    public TimeSlot(float slot) {
-        this.slot = slot;
-    }
-
-    public float getSlot() {
+    public Integer getSlot() {
         return slot;
     }
 
-    public void setSlot(float slot) {
+    public void setSlot(Integer slot) {
         this.slot = slot;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + Float.floatToIntBits(this.slot);
+        hash = 97 * hash + Objects.hashCode(this.slot);
         return hash;
     }
 
@@ -58,8 +55,8 @@ public class TimeSlot extends AbstractEntity {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TimeSlot other = (TimeSlot) obj;
-        if (Float.floatToIntBits(this.slot) != Float.floatToIntBits(other.slot)) {
+        final Timeslot other = (Timeslot) obj;
+        if (!Objects.equals(this.slot, other.slot)) {
             return false;
         }
         return true;
@@ -67,7 +64,6 @@ public class TimeSlot extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "TimeSlot{" + "slot=" + slot + '}';
+        return "Timeslot{" + "slot=" + slot + '}';
     }
-
 }

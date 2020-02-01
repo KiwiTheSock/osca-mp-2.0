@@ -9,3 +9,7 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+Hausarbeit-KbSE/src/main/resources/META-INF/persistence.xml
+Hausarbeit-KbSE/src/main/resources/META-INF/persistence.xml
+Hausarbeit-KbSE/src/main/webapp/WEB-INF/glassfish-resources.xml
+*.xml
