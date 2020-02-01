@@ -92,7 +92,7 @@ public class CalendarViewDozent implements Serializable {
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-
+        System.out.println("DatetimeDE: "+getDateTimeDe());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     

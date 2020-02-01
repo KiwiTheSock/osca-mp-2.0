@@ -46,6 +46,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
         this.password = password;
     }
     
+    //Login dozent + student Verbinden
     
     //Customer customer = new Customer();
     public String login() {

@@ -24,16 +24,16 @@ import javax.persistence.Table;
     @NamedQuery(name = "Timeslot.findBySlot", query = "SELECT t FROM Timeslot t WHERE t.slot = :slot")})
 public class Timeslot extends AbstractEntity {
 
-    private Double slot;
+    private Integer slot;
 
     public Timeslot() {
     }
 
-    public Double getSlot() {
+    public Integer getSlot() {
         return slot;
     }
 
-    public void setSlot(Double slot) {
+    public void setSlot(Integer slot) {
         this.slot = slot;
     }
 
