@@ -30,7 +30,8 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "Exam.findByDuration", query = "SELECT e FROM Exam e WHERE e.duration = :duration"),
     @NamedQuery(name = "Exam.findByFinish", query = "SELECT e FROM Exam e WHERE e.finish = :finish"),
     @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents"),
-    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e._start = :start")})
+    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e._start = :start"),
+    @NamedQuery(name= "Exam.findByDepartment", query="SELECT e FROM Exam e WHERE e.department = :department" )})
 public class Exam extends AbstractEntity {
 
     @Temporal(javax.persistence.TemporalType.DATE)

@@ -84,16 +84,17 @@ public class CalendarViewDozent implements Serializable {
         setDateDe(GregorianCalendar.getInstance().getTime());
         setDateTimeDe(GregorianCalendar.getInstance().getTime());
     }
-
+   
+    //return list<Date>
     public void displayLogDate() {
         FacesMessage msg;
         if (getDate2() != null) {
             
             msg = new FacesMessage("Bestätigt: ", "Tag " + getDate2() + " hinzugefügt!");
+            
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-        System.out.println("DatetimeDE: "+getDateTimeDe());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     

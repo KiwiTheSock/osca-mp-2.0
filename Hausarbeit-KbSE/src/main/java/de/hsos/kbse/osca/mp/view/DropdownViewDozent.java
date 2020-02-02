@@ -437,6 +437,5 @@ public class DropdownViewDozent implements Serializable {
      */
     public void setCheckIsStudent(boolean checkIsStudent) {
         this.checkIsStudent = checkIsStudent;
-    }
-
+    }    
 }

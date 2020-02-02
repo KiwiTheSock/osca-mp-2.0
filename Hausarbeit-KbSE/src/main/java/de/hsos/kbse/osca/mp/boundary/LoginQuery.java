@@ -45,14 +45,10 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    //Login dozent + student Verbinden
-    
-    //Customer customer = new Customer();
+
     public String login() {
 
         System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.login()");
-        //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         this.cust = Customers.getByLogin(this.username);
         if (this.cust == null | !cust.getPassword().equals(this.password)) {
@@ -63,6 +59,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             this.loggedIn = true;
             this.accountId = this.cust.getId();
 
+            //SessionHandler
             try {
                 HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
                 SessionHandler.store(accountId, sessionObj);
@@ -70,34 +67,30 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
                 System.out.println("HTTPSession went wrong");
             }
 
-            return "modulAuswahlStudent.xhtml?faces-redirect=true";
-        }
-    }
+            switch (this.cust.getType()) {
 
-    public String loginDozent() {
+                //Superadmin?
+                case 0:
+                    System.out.println("Superadmin!");
+                    return null;
+                //Dozent 
+                case 1:
+                    return "modulAnlegenDozent.xhtml?faces-redirect=true";
+                //Student
+                case 2:
+                    return "modulAuswahlStudent.xhtml?faces-redirect=true";
 
-        System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.loginDozent()");
-        //System.out.println("1 Username: " + this.username + " Password: " + this.password);
-
-        this.cust = Customers.getByLogin(this.username);
-        if (this.cust == null | !cust.getPassword().equals(this.password)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
-            return null;
-        } else {
-
-            if (this.cust.getType() == 1) {
-                this.loggedIn = true;
-                this.accountId = this.cust.getId();
-                return "modulAnlegenDozent.xhtml?faces-redirect=true";
+                default:
+                    System.out.println("Default!");
+                    return null;
             }
-            //Alternativ Route? 
-            return null;
+
         }
     }
 
     public String logout() {
+        
         System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.logout()");
-        //System.out.println("1 Username: " + this.username + " Password: " + this.password);
 
         if (this.loggedIn == true) {
             System.out.println("Inside: logout()");
@@ -105,7 +98,7 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             this.accountId = this.cust.getId();
             return "login.xhtml?faces-redirect=true";
         }
-        //Alternativ Route? 
+        
         return null;
     }
 

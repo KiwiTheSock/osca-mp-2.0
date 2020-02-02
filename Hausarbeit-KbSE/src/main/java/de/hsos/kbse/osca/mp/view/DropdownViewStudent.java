@@ -5,22 +5,23 @@
  */
 package de.hsos.kbse.osca.mp.view;
 
+import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
+import de.hsos.kbse.osca.mp.entity.Department;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 
 /**
  *
  * @author wihowert
  */
 @RequestScoped
-public class DropdownViewStudent implements Serializable {
+public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
 
     private Map<String, Map<String, String>> modulDay = new HashMap<>();
     private Map<String, Map<String, String>> dayTime = new HashMap<>();
@@ -35,17 +36,22 @@ public class DropdownViewStudent implements Serializable {
 
     @PostConstruct
     public void init() {
+        
+        //Load all Departments
+        //fillModules();
+        
         setModuls(new HashMap<>());
         setTimes(new HashMap<>());
         setStudents(new HashMap<>());
         
-        getStudents().put("Stud Test", "Stud Test");
+        //Wird nicht mehr benötigt
+        /*        getStudents().put("Stud Test", "Stud Test");
         getStudents().put("Stud TestDos", "Stud TestDos");
-        getStudents().put("Stud TestTres", "Stud TestTres");
+        getStudents().put("Stud TestTres", "Stud TestTres");*/
 
-        getModuls().put("Mathe1", "Mathe 1");
+        /*        getModuls().put("Mathe1", "Mathe 1");
         getModuls().put("KBSE", "KBSE");
-        getModuls().put("OOAD", "OOAD");
+        getModuls().put("OOAD", "OOAD");*/
 
         getTimes().put("13:00", "13:00");
         getTimes().put("14:00", "14:00");
@@ -67,6 +73,17 @@ public class DropdownViewStudent implements Serializable {
         getModulDay().put("OOAD", getDays());
 
         getDayTime().put("15.10.2019", getTimes());
+    }
+    
+    public void fillModules() {
+        List<Department> tmp = this.Departments.getAll();
+        tmp.forEach((_item) -> {
+            getModuls().put(_item.getSemester(), _item.getModulename());
+        });
+    }
+    
+    public void fillDays() {
+        List<Exam> tmp = this.Exams.getAllbyModule()
     }
 
     public Map<String, Map<String, String>> getModulDay() {
