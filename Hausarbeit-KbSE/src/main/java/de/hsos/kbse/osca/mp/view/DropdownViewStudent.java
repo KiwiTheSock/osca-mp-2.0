@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.view;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Department;
+import de.hsos.kbse.osca.mp.entity.Exam;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
 
         getStudents().put("Stud Test", "Stud Test");
         getStudents().put("Stud TestDos", "Stud TestDos");
-        getStudents().put("Stud TestTres", "Stud TestTres");*/
+        getStudents().put("Stud TestTres", "Stud TestTres");
 
         /*        getModuls().put("Mathe1", "Mathe 1");
         getModuls().put("KBSE", "KBSE");
@@ -86,7 +87,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     }
     
     public void fillDays() {
-        List<Exam> tmp = this.Exams.getAllbyModule()
+        List<Exam> tmp = this.Exams.getAllDaybyDepartment();
     }
 
     // Nachricht fuer Bestaetigung/Freigeben des Termins
