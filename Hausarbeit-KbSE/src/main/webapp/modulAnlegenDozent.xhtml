@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
+<!-- Wiho Wert -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
@@ -9,36 +10,45 @@
         <title> Osca-MP-Anmeldung </title>        
     </h:head>  
 
+    <!-- CSS fuer Icons-->
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
 
     <h:body style="background-image: url('data/blurred.jpg'); background-repeat: no-repeat; background-size: cover">
 
+        <!-- Logo der Hochschule -->
         <div style="text-align: center">
             <img height="30%" width="30%" src="data/Logo.png" alt="Hier sollte eigentlich ein Bild sein ..." onclick="location.href = 'load.xhtml'"></img>
         </div>
 
+        <!-- Rahmen -->
         <div style="background-color:#FFFFFF; margin:30px; text-align: center; border-left: 6px solid #BCCBD0; border-top: 6px solid #BCCBD0" >
 
             <h:form style="text-align: left;padding: 45px;" id="form">
 
 
-
+                <!-- Titel -->
                 <p:row>
                     <h3 style="font-family: Andale Mono, monospace; margin-bottom: 50px">Anlegen des Moduls zur muendlichen Pruefung</h3>
                 </p:row>
 
+                <!-- tabView-->
                 <p:tabView dynamic="true" cache="true" effect="fold">
 
+                    <!-- Tab zum anlegen des Moduls -->
                     <p:tab title="Modul">
+                        <!-- Anzeigen einer Nachricht -->
                         <p:growl id="msgs" showDetail="true" />
 
+                        <!-- Trennunslinie -->
                         <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
                         <p:spacer style="margin-top: 30px"/>
 
+                        <!-- Grid fuer das Anlegen-->
                         <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
                             <p:outputLabel for="terms" value="Semester: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
+                            <!-- Auswahl des Semesters-->
                             <p:selectOneMenu disabled="#{dropdownViewDozent.buttonCheck}" id="terms" value="#{dropdownViewDozent.term}" style="font-family: Andale Mono, monospace; font-size: 14px;">
                                 <f:selectItem itemLabel="Semester auswaehlen" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{dropdownViewDozent.convertListTerms}"/>
@@ -47,13 +57,17 @@
 
                         </h:panelGrid>
 
+                        <!-- Panel fuer das Anlegen des Namens und der Zeiten -->
                         <p:outputPanel style="margin-top: 10px" id="display">
 
+                            <!-- Trennungslinie -->
                             <p:separator id="nextSep" rendered="#{dropdownViewDozent.termExists}" style="margin-top: 30px; margin-bottom: 30px;border-color: #BCCBD0"/>
                             <p:spacer id="nextSpa" rendered="#{dropdownViewDozent.termExists}"/>
 
+                            <!-- Titel -->
                             <p:outputLabel rendered="#{dropdownViewDozent.termExists}" value="Name und Pruefung fuer Modul festlegen" style="font-family: Andale Mono, monospace"/>
 
+                            <!-- Grid fuer Namen und Pruefungsdauer -->
                             <h:panelGrid rendered="#{dropdownViewDozent.termExists}" columns="2" style="margin-top:50px" cellpadding="5">
 
                                 <p:outputLabel for="modulName" value="Modulname: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
@@ -84,18 +98,21 @@
 
                             </h:panelGrid>
 
+                            <!-- Trennungslinie fur das Hinzufuegen der Zeiten-->
                             <p:separator id="seperatorChecked" rendered="#{dropdownViewDozent.buttonCheck}" style="margin-top: 30px; margin-bottom: 30px; border-color: #BCCBD0"/>
                             <p:spacer rendered="#{dropdownViewDozent.buttonCheck}" id="spacerChecked"/>
 
                             <p:outputLabel id="setDays" rendered="#{dropdownViewDozent.buttonCheck}" value="Tage und Zeiten festlegen" style="font-family: Andale Mono, monospace;"/>
 
+                            <!-- Grid fuer den dropdown Kalender -->
                             <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
 
                                 <p:outputLabel for="popup" value="Termine hinzufuegen:" style="font-family: Andale Mono, monospace; font-size: 14px"/>
-                                <p:datePicker disabled="#{dropdownViewDozent.buttonCheck2}" id="popup" value="#{calendarViewDozent.date2}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                                <p:datePicker disabled="#{dropdownViewDozent.buttonCheck2}" id="popup" value="#{dropdownViewDozent.date2}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                             </h:panelGrid>
 
+                            <!-- Grid fuer den Pruefungszeitraum Start/Ende -->
                             <h:panelGrid rendered="#{dropdownViewDozent.buttonCheck}" columns="2" style="margin-top:50px" cellpadding="5">
 
                                 <p:outputLabel value="Pruefungszeitraum auswaehlen (Start): " style="font-family: Andale Mono, monospace; font-size: 14px"/>
@@ -113,7 +130,7 @@
                                 <h:panelGrid>
 
                                     <p:commandButton value="Hinzufuegen" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                                     action="#{calendarViewDozent.displayLogDate()}" 
+                                                     action="#{dropdownViewDozent.displayLogDate()}" 
                                                      style="font-family: Andale Mono, monospace; font-size: 15px"
                                                      icon="pi pi-save"
                                                      id="butt"
@@ -135,21 +152,24 @@
                         </p:outputPanel>
                     </p:tab>
 
-                    <p:tab title="Studenten hinzufügen">
+                    <!-- Tabview fuer das Hinzufuegen eines Studentens zu einer Pruefung-->
+                    <p:tab title="Studenten hinzufuegen">
                         <p:growl id="msgs2" showDetail="true" />
 
+                        <!-- Trennungslinie -->
                         <p:separator id="studentSeparator" style="margin-top: 30px; border-color: #BCCBD0"/>
                         <p:spacer id="studentSpacer" style="margin-top: 30px"/>
 
-                        <p:outputLabel id="setStudents" value="Studenten/innen einer Prüfung zuweisen" style="font-family: Andale Mono, monospace;"/>
+                        <p:outputLabel id="setStudents" value="Studenten/innen einer Pruefung zuweisen" style="font-family: Andale Mono, monospace;"/>
 
+                        <!-- Grid fuer das Hinzufuegen eine Studenten-->
                         <h:panelGrid columns="2" style="margin-top:50px" cellpadding="5">
 
                             <p:outputLabel for="students" value="Studenten/innen: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                             <p:selectOneMenu id="students" value="#{dropdownViewStudent.student}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                                 <p:ajax update="students"/>
-                                <f:selectItem itemLabel="Student/innen auswählen" itemValue="" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Student/innen auswaehlen" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{dropdownViewStudent.students}" />
                             </p:selectOneMenu>
 
@@ -178,7 +198,7 @@
                             </p:selectOneMenu>
 
                         </h:panelGrid>
-
+                        <!-- Bestaetigen und ausloggen-->
                         <h:panelGrid columns="1" style="margin-top:50px" cellpadding="5">
                             <p:commandButton value="Bestaetigen" update="msgs2" action="#{dropdownViewStudent.displayLog}" 
                                              style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 30px"
