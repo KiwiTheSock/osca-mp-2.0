@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
+<!-- Wiho Wert-->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     
@@ -8,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     
+    <!-- Body und CSS fuer die Ladeseite-->
     <h:body style="background-image: url('data/blurred.jpg'); background-repeat: no-repeat; background-size: cover">
         <style type="text/css">
             .container {
@@ -108,10 +110,12 @@
             }
         </style>
 
+        <!-- Script fuer Weiterleitung -->
         <script type="text/javascript">
-            window.setTimeout('location.href="login.xhtml"', 4000);
+            window.setTimeout('location.href="login.xhtml"', 2000);
         </script>
 
+        <!-- "Ladepunkte" -->
         <div class='container'>
             <div class='loader'>
                 <div class='loader--dot'></div>

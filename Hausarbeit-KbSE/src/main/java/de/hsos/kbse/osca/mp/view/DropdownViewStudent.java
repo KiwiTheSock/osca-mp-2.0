@@ -22,23 +22,27 @@ import javax.inject.Named;
 @RequestScoped
 public class DropdownViewStudent implements Serializable {
 
+    // Listen fuer angemeldete Module
     private Map<String, Map<String, String>> modulDay = new HashMap<>();
     private Map<String, Map<String, String>> dayTime = new HashMap<>();
-    private String student;
-    private String modul;
-    private String day;
-    private String time;
     private Map<String, String> moduls = new HashMap<>();
     private Map<String, String> days = new HashMap<>();
     private Map<String, String> students = new HashMap<>();
     private Map<String, String> times = new HashMap<>();
+    
+    // Variablen zum Anzeigen
+    private String student;
+    private String modul;
+    private String day;
+    private String time;
 
+    // Beispielhafte Initialisierung von Daten
     @PostConstruct
     public void init() {
         setModuls(new HashMap<>());
         setTimes(new HashMap<>());
         setStudents(new HashMap<>());
-        
+
         getStudents().put("Stud Test", "Stud Test");
         getStudents().put("Stud TestDos", "Stud TestDos");
         getStudents().put("Stud TestTres", "Stud TestTres");
@@ -69,42 +73,7 @@ public class DropdownViewStudent implements Serializable {
         getDayTime().put("15.10.2019", getTimes());
     }
 
-    public Map<String, Map<String, String>> getModulDay() {
-        return modulDay;
-    }
-
-    public String getModul() {
-        return modul;
-    }
-
-    public void setModul(String modul) {
-        this.modul = modul;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public Map<String, String> getModuls() {
-        return moduls;
-    }
-
-    public Map<String, String> getDays() {
-        return days;
-    }
-
-    public void onChange() {
-        if (getModul() != null && !modul.equals("")) {
-            setDays(getModulDay().get(getModul()));
-        } else {
-            setDays(new HashMap<String, String>());
-        }
-    }
-
+    // Nachricht fuer Bestaetigung/Freigeben des Termins
     public void displayLog() {
         FacesMessage msg;
         if (getDay() != null && getModul() != null && getTime() != null) {
@@ -205,6 +174,55 @@ public class DropdownViewStudent implements Serializable {
      */
     public void setStudents(Map<String, String> students) {
         this.students = students;
+    }
+
+    /**
+     * @return the modulDay
+     */
+    public Map<String, Map<String, String>> getModulDay() {
+        return modulDay;
+    }
+
+    /**
+     * @return the moduls
+     */
+    public Map<String, String> getModuls() {
+        return moduls;
+    }
+
+    /**
+     * @return the days
+     */
+    public Map<String, String> getDays() {
+        return days;
+    }
+
+    /**
+     * @return the modul
+     */
+    public String getModul() {
+        return modul;
+    }
+
+    /**
+     * @param modul the modul to set
+     */
+    public void setModul(String modul) {
+        this.modul = modul;
+    }
+
+    /**
+     * @return the day
+     */
+    public String getDay() {
+        return day;
+    }
+
+    /**
+     * @param day the day to set
+     */
+    public void setDay(String day) {
+        this.day = day;
     }
 
 }
