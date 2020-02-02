@@ -7,11 +7,14 @@ package de.hsos.kbse.osca.mp.service;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 /**
  *
  * @author nordm
+ * @param <T>
  */
+@Transactional
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;
