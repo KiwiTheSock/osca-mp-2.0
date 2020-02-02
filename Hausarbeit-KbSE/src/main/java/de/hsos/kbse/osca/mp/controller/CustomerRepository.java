@@ -8,6 +8,7 @@ package de.hsos.kbse.osca.mp.controller;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import de.hsos.kbse.osca.mp.service.AccessType;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
@@ -38,6 +39,10 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         super(Customer.class);
     }
 
+    /**
+     *
+     * @param init
+     */
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
             super.create(new Customer("Administrator", "Administrator", "admin@hs-osnabrueck.de", "admin", "admin", 0));
@@ -55,6 +60,13 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         }
     }
 
+     public List<Customer> findAllDozents() {
+        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
+        query.setParameter("type", AccessType.DOZENT.getLevelCode());
+        return query.getResultList();
+     }
+    
+    
     public Customer getByLogin(String login) {
         System.out.print("SQL: get " + login);
         TypedQuery<Customer> query;

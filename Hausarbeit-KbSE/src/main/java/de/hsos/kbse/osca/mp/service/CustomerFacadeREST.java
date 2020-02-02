@@ -5,17 +5,22 @@
  */
 package de.hsos.kbse.osca.mp.service;
 
+import de.hs.kbse.osca.mp.RESTfulInterfaces.CustomerRestInterface;
+import de.hsos.kbse.osca.mp.controller.CustomerRepository;
 import de.hsos.kbse.osca.mp.entity.Customer;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -31,7 +36,10 @@ import javax.ws.rs.core.Response;
  */
 @RequestScoped
 @Path("de.hsos.kbse.osca.mp.entity.customer")
-public class CustomerFacadeREST extends AbstractFacade<Customer> {
+public class CustomerFacadeREST extends AbstractFacade<Customer> implements CustomerRestInterface {
+
+    @Inject
+    private CustomerRepository repo;
 
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -40,32 +48,56 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> {
         super(Customer.class);
     }
 
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response createCustomer(
-            @QueryParam("firstname") String firstname,
-            @QueryParam("lastname") String lastname
-    ) {
-        Customer cus = new Customer(firstname, lastname, "lastname", "lastname", "lastname", 2);
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<Customer> findAllStudents() {
+        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
+        query.setParameter("type", AccessType.STUDENT.getLevelCode());
+        return query.getResultList();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Response findAllDozents() {
+        try {
+            Collection<Customer> all = repo.findAllDozents();
+            if (all.isEmpty()) {
+                return Response.noContent().build();
+            }
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(getJsonb().toJson(all)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+
+    }
+
+    /**
+     *
+     * @param firstname
+     * @param email
+     * @return
+     */
+    @Override
+    public Response createStudent(String firstname, String email) {
+        Customer cus = new Customer(firstname, "lastname", email, "login", "password", 2);
         try {
             super.create(cus);
-
             return Response
-                    .status(200)
-                    .entity("newEntity : " + cus.getFirstname() + " with " + cus.getLastname()
-                            + " and " + cus.getLogin() + " and " + cus.getPassword()).build();
-        } catch (NullPointerException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-
+                    .status(Response.Status.CREATED)
+                    .entity(getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
         }
     }
 
-//    @POST
-//    @Override
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void create(Customer entity) {
-//        super.create(entity);
-//    }
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -94,24 +126,6 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Customer> findAll() {
         return super.findAll();
-    }
-
-    @GET
-    @Path("students/")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Customer> findAllStudents() {
-        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.STUDENT.getLevelCode());
-        return query.getResultList();
-    }
-
-    @GET
-    @Path("dozent/")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Customer> findAllDozents() {
-        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.DOZENT.getLevelCode());
-        return query.getResultList();
     }
 
     @GET
