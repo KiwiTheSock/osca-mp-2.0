@@ -50,13 +50,12 @@ public class DepartmentFacadeREST implements DepartmentRestInterface{
 //    public void create(Department entity) {
 //        this.repo.create(entity);
 //    }
-
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Long id, Department entity) {
         this.repo.edit(entity);
-        
+
     }
 
     @DELETE
@@ -67,21 +66,21 @@ public class DepartmentFacadeREST implements DepartmentRestInterface{
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Department find(@PathParam("id") Long id) {
         return this.repo.find(id);
     }
 
     @GET
 //    @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Department> findAll() {
         return this.repo.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Department> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return this.repo.findRange(new int[]{from, to});
     }
@@ -113,6 +112,7 @@ public class DepartmentFacadeREST implements DepartmentRestInterface{
     public Response updateDepartmentModulname(String modulname, String newModulname) {
         try {
             Department dep = this.repo.getByModulname(modulname);
+            System.out.println("asdlkfjasldfkj  " + dep.toString());
             dep.setModulename(newModulname);
             this.repo.edit(dep);
             return Response.ok(this.repo.getJsonb().toJson(dep)).build();
@@ -135,12 +135,20 @@ public class DepartmentFacadeREST implements DepartmentRestInterface{
 
     @Override
     public Response deleteDepartment(String modulname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Department cus = this.repo.getByModulname(modulname);
+            this.repo.remove(cus);
+            return Response
+                    .accepted(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     @Override
     public Response findDepartment(String modulname) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }
