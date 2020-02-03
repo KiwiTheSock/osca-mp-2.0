@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
  */
 @RequestScoped
 @Path("de.hsos.kbse.osca.mp.entity.department")
-public class DepartmentFacadeREST implements DepartmentRestInterface {
+public class DepartmentFacadeREST implements DepartmentRestInterface{
 
     @Inject
     private DepartmentRepository repo;

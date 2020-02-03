@@ -382,7 +382,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     public void setButtonCheck(boolean buttonCheck) {
         System.out.println("CHECK");
         this.buttonCheck = buttonCheck;
-        this.Departments.add(new Department(this.term,"Semester X"));
+        this.Departments.create(new Department(this.term,"Semester X"));
     }
 
     /**

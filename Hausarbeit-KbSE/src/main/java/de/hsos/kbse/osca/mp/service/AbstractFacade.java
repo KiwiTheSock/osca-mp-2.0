@@ -71,13 +71,13 @@ public abstract class AbstractFacade<T> {
         return ((Long) q.getSingleResult()).intValue();
     }
 
-//    public Jsonb getJsonb() {
-//        return jsonb;
-//    }
-//
-//    public void setJsonb(Jsonb jsonb) {
-//        this.jsonb = jsonb;
-//    }
+    /*    public Jsonb getJsonb() {
+    return jsonb;
+    }
+    
+    public void setJsonb(Jsonb jsonb) {
+    this.jsonb = jsonb;
+    }*/
 
     public Class<T> getEntityClass() {
         return entityClass;

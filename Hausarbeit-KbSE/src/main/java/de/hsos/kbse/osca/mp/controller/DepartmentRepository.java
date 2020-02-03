@@ -9,6 +9,7 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractRepository;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
