@@ -9,6 +9,7 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -28,6 +29,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname"),
     @NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname"),
     @NamedQuery(name = "Customer.findByLogin", query = "SELECT c FROM Customer c WHERE c.login = :login"),
+    @NamedQuery(name = "Customer.findIdByLogin", query = "SELECT c.id FROM Customer c WHERE c.login = :login"),
     @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password"),
     @NamedQuery(name = "Customer.findByType", query = "SELECT c FROM Customer c WHERE c.type = :type")})
 public class Customer extends AbstractEntity {
@@ -37,7 +39,7 @@ public class Customer extends AbstractEntity {
     private String firstname;
 
     private String lastname;
-
+    @Column(nullable = false,unique = true) 
     private String login;
 
     private String password;

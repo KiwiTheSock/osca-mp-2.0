@@ -8,17 +8,17 @@ package de.hsos.kbse.osca.mp.controller;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import de.hsos.kbse.osca.mp.service.AccessType;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import javax.annotation.PostConstruct;
-import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
+import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -28,9 +28,15 @@ import javax.persistence.TypedQuery;
  *
  * @author Philipp
  */
+@Named
 @ApplicationScoped
 public class CustomerRepository extends AbstractFacade<Customer> {
 
+    
+    @Inject
+    private Jsonb jsonb;
+    
+    
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -38,6 +44,10 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         super(Customer.class);
     }
 
+    /**
+     *
+     * @param init
+     */
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
             super.create(new Customer("Administrator", "Administrator", "admin@hs-osnabrueck.de", "admin", "admin", 0));
@@ -55,11 +65,33 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         }
     }
 
+    public Collection<Customer> findAllFromType(int accessType) {
+        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
+        query.setParameter("type", accessType);
+        return query.getResultList();
+    }
+
+    public Collection<Customer> findAllDozents() {
+        return this.findAllFromType(AccessType.DOZENT.getLevelCode());
+    }
+
+    public Collection<Customer> findAllStudents() {
+        return this.findAllFromType(AccessType.STUDENT.getLevelCode());
+    }
+
+    public Collection<Customer> findAllAdmins() {
+        return this.findAllFromType(AccessType.ADMINISTRATOR.getLevelCode());
+    }
+
     public Customer getByLogin(String login) {
-        System.out.print("SQL: get " + login);
-        TypedQuery<Customer> query;
-        query = this.getEntityManager().createNamedQuery("Customer.findByLogin", Customer.class);
-        return query.setParameter("login", login).getSingleResult();
+        try {
+            System.out.print("SQL: get " + login);
+            TypedQuery<Customer> query;
+            query = this.getEntityManager().createNamedQuery("Customer.findByLogin", Customer.class);
+            return query.setParameter("login", login).getSingleResult();
+        } catch (NoResultException e) {
+            throw e;
+        }
     }
 
     public List<Customer> getAll() {
@@ -74,4 +106,21 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         return em;
     }
 
+    public Jsonb getJsonb() {
+        return jsonb;
+    }
+
+    public void setJsonb(Jsonb jsonb) {
+        this.jsonb = jsonb;
+    }
+
+//    public EntityManager getEm() {
+//        return em;
+//    }
+//
+//    public void setEm(EntityManager em) {
+//        this.em = em;
+//    }
+
+    
 }

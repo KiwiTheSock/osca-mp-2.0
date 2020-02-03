@@ -5,17 +5,24 @@
  */
 package de.hsos.kbse.osca.mp.service;
 
+import de.hsos.kbse.osca.mp.entity.Customer;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 /**
  *
  * @author nordm
  * @param <T>
  */
+
 @Transactional
 public abstract class AbstractFacade<T> {
+
 
     private Class<T> entityClass;
 
@@ -63,5 +70,22 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
+
+//    public Jsonb getJsonb() {
+//        return jsonb;
+//    }
+//
+//    public void setJsonb(Jsonb jsonb) {
+//        this.jsonb = jsonb;
+//    }
+
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+
     
 }
