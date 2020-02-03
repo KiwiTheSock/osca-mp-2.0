@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hs.kbse.osca.mp.RESTfulInterfaces;
+package de.hsos.kbse.osca.mp.RESTfulInterfaces;
 
 import javax.enterprise.inject.Produces;
 import javax.json.bind.Jsonb;

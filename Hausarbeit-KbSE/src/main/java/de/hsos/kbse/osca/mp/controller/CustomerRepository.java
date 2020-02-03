@@ -9,16 +9,11 @@ import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import de.hsos.kbse.osca.mp.service.AccessType;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import javax.annotation.PostConstruct;
-import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -60,13 +55,32 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         }
     }
 
-     public List<Customer> findAllDozents() {
+    public List<Customer> findAllDozents() {
         TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
         query.setParameter("type", AccessType.DOZENT.getLevelCode());
         return query.getResultList();
-     }
-    
-    
+    }
+
+//    public Customer findByLogin(String login) {
+//        return this.getEntityManager().find(Customer.class,login);
+//    }
+
+    public Customer createCustomer(String firstname, String lastname, String email, String login, String password, int accessType) {
+        return new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
+    }
+
+    public Collection<Customer> findAllStudents() {
+        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
+        query.setParameter("type", AccessType.STUDENT.getLevelCode());
+        return query.getResultList();
+    }
+
+    public List<Customer> findAllAdmins() {
+        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
+        query.setParameter("type", AccessType.ADMINISTRATOR.getLevelCode());
+        return query.getResultList();
+    }
+
     public Customer getByLogin(String login) {
         System.out.print("SQL: get " + login);
         TypedQuery<Customer> query;

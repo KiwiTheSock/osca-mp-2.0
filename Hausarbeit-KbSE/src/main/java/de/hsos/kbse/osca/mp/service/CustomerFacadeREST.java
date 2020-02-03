@@ -5,7 +5,7 @@
  */
 package de.hsos.kbse.osca.mp.service;
 
-import de.hs.kbse.osca.mp.RESTfulInterfaces.CustomerRestInterface;
+import de.hsos.kbse.osca.mp.RESTfulInterfaces.CustomerRestInterface;
 import de.hsos.kbse.osca.mp.controller.CustomerRepository;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import java.util.Collection;
@@ -13,20 +13,16 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -53,10 +49,18 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
      * @return
      */
     @Override
-    public List<Customer> findAllStudents() {
-        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.STUDENT.getLevelCode());
-        return query.getResultList();
+    public Response findAllStudents() {
+        try {
+            Collection<Customer> all = repo.findAllStudents();
+            if (all.isEmpty()) {
+                return Response.noContent().build();
+            }
+            return Response
+                    .status(Response.Status.FOUND)
+                    .entity(getJsonb().toJson(all)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 
     /**
@@ -71,30 +75,89 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
                 return Response.noContent().build();
             }
             return Response
-                    .status(Response.Status.CREATED)
+                    .status(Response.Status.FOUND)
                     .entity(getJsonb().toJson(all)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
+    }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Response findAllAdmins() {
+        try {
+            Collection<Customer> all = repo.findAllAdmins();
+            if (all.isEmpty()) {
+                return Response.noContent().build();
+            }
+            return Response
+                    .status(Response.Status.FOUND)
+                    .entity(getJsonb().toJson(all)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 
     /**
      *
      * @param firstname
+     * @param lastname
      * @param email
+     * @param login
+     * @param password
      * @return
      */
     @Override
-    public Response createStudent(String firstname, String email) {
-        Customer cus = new Customer(firstname, "lastname", email, "login", "password", 2);
+    public Customer createStudent(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
         try {
             super.create(cus);
-            return Response
-                    .status(Response.Status.CREATED)
-                    .entity(getJsonb().toJson(cus)).build();
+            return cus;
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.CONFLICT).build();
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param login
+     * @param password
+     * @return
+     */
+    @Override
+    public Customer createDozent(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
+        try {
+            super.create(cus);
+            return cus;
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param login
+     * @param password
+     * @return
+     */
+    @Override
+    public Customer createAdmin(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
+        try {
+            super.create(cus);
+            return cus;
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+            return null;
         }
     }
 
@@ -147,6 +210,16 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+
+    @Override
+    public Customer updateCustomer(String login, String firstname, String lastname, String email, String password) {
+        return this.getEntityManager().find(Customer.class, login);
+    }
+
+    @Override
+    public Customer findCustomerByLogin(String login) {
+        return this.getEntityManager().find(Customer.class, login);
     }
 
 }
