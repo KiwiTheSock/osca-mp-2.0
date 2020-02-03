@@ -21,6 +21,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -30,16 +33,19 @@ import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 @ViewScoped
 public class DropdownViewDozent implements Serializable {
 
+    // Listen zum Anlegen des Moduls
     private Map<String, String> terms = new HashMap<>();
     private Map<String, Integer> durations = new HashMap<>();
     private Map<String, Integer> studentCounts = new HashMap<>();
     private Map<String, String> examMins = new HashMap<>();
     private Map<String, String> examMaxs = new HashMap<>();
+    // Listen zum Konvertieren und Anzeigen
     private List<String> convertListTerms = new ArrayList<>();
     private List<String> convertListDurations = new ArrayList<>();
     private List<String> convertListStudentCounts = new ArrayList<>();
     private List<String> convertListExamMins = new ArrayList<>();
     private List<String> convertListExamMaxs = new ArrayList<>();
+    // Variablen zum Anzeigen der aktuellen Werte
     private String term;
     private String text;
     private String modulName;
@@ -47,13 +53,71 @@ public class DropdownViewDozent implements Serializable {
     private String examMax = "15:00";
     private int duration = 30;
     private int studentCount = 1;
+    // Booleans zum Ueberpruefen
     private boolean termExists = false;
     private boolean buttonCheck = false;
     private boolean buttonCheck2 = false;
     private boolean checkIsStudent = false;
 
+    //Dropdown Kalender
+        // Listen zum Verwalten des Kalenders
+    private List<Date> invalidDates;
+    private List<Integer> invalidDays;
+    private Map<Integer, Date> days = new HashMap<>();
+    private List<Date> convertListDays = new ArrayList<>();
+        // Variablen fuer den Kalender
+    private Date date2;
+    private Date minDate;
+    private Date maxDate;
+    private Date minTime;
+    private Date maxTime;
+    private Date minDateTime;
+    private Date maxDateTime;
+    private Date dateDe;
+    private Date dateTimeDe;
+    private Date day;
+    private static int key = 0;
+
+    // Beispielhafte Initialisierung der Daten
     @PostConstruct
     public void init() {
+        setInvalidDates(new ArrayList<>());
+        Date today = new Date();
+        getInvalidDates().add(today);
+        long oneDay = 24 * 60 * 60 * 1000;
+        for (int i = 0; i < 5; i++) {
+            getInvalidDates().add(new Date(getInvalidDates().get(i).getTime() + oneDay));
+        }
+
+        setInvalidDays(new ArrayList<>());
+        getInvalidDays().add(0);
+        /* the first day of week is disabled */
+        getInvalidDays().add(3);
+
+        setMinDate(new Date(today.getTime() - (365 * oneDay)));
+        setMaxDate(new Date(today.getTime() + (365 * oneDay)));
+
+        Calendar tmp = Calendar.getInstance();
+        tmp.set(Calendar.HOUR_OF_DAY, 9);
+        tmp.set(Calendar.MINUTE, 0);
+        tmp.set(Calendar.SECOND, 0);
+        tmp.set(Calendar.MILLISECOND, 0);
+        setMinTime(tmp.getTime());
+
+        tmp = Calendar.getInstance();
+        tmp.set(Calendar.HOUR_OF_DAY, 17);
+        tmp.set(Calendar.MINUTE, 0);
+        tmp.set(Calendar.SECOND, 0);
+        tmp.set(Calendar.MILLISECOND, 0);
+        setMaxTime(tmp.getTime());
+
+        setMinDateTime(new Date(today.getTime() - (7 * oneDay)));
+        setMaxDateTime(new Date(today.getTime() + (7 * oneDay)));
+
+        setDateDe(GregorianCalendar.getInstance().getTime());
+        setDateTimeDe(GregorianCalendar.getInstance().getTime());
+
+        // 
         getTerms().put("Semester1", "WiSe 17/18");
         getTerms().put("Semester2", "SoSe 18");
         getTerms().put("Semester3", "WiSe 18/19");
@@ -100,11 +164,25 @@ public class DropdownViewDozent implements Serializable {
         }
     }
 
+    // Nachricht fuer den Tag des Kalenders
+    public void displayLogDate() {
+        FacesMessage msg;
+        if (getDate2() != null) {
+
+            msg = new FacesMessage("Bestaetigt: ", "Tag " + getDate2() + " hinzugefuegt!");
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
+        }
+        System.out.println("DatetimeDE: " + getDateTimeDe());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    // Nachricht fuer das Anlegen eines Moduls
     public void displayLog() {
         FacesMessage msg;
         if (getTerm() != null) {
             msg = new FacesMessage("Bestaetigt: ", "Fuer das " + getTerm() + " das Modul \"" + getModulName()
-                    + "\" mit der Pruefungsdauer " + getDuration() + " für "
+                    + "\" mit der Pruefungsdauer " + getDuration() + " fuer "
                     + getStudentCount() + " Pruefling(e) angelegt");
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Parameter nicht ausgewaehlt.");
@@ -113,23 +191,16 @@ public class DropdownViewDozent implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
-    public void displayLogNext() {
-        FacesMessage msg;
-        if (getExamMin() != null && getExamMax() != null) {
-            msg = new FacesMessage("Alles klar Chef!", " Alles weitergegeben ... " + getExamMin()+ "bis"+ getExamMax());
-        } else {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Da ging was schief ...");
-        }
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
+    /**
+     * @void redirect to Student/Dozent
+     */
     @Logable(logLevel = LevelEnum.INFO)
-    public void redirect(String red) throws IOException{
-        System.out.println("War hier Brudi");
+    public void redirect(String redir) throws IOException {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        if(checkIsStudent == true){
-         context.redirect(red);   
+        if (isCheckIsStudent() == true) {
+            context.redirect(redir);
         } else {
-            context.redirect(red);
+            context.redirect(redir);
         }
     }
 
@@ -437,6 +508,225 @@ public class DropdownViewDozent implements Serializable {
      */
     public void setCheckIsStudent(boolean checkIsStudent) {
         this.checkIsStudent = checkIsStudent;
+    }
+
+    /**
+     * @return the date2
+     */
+    public Date getDate2() {
+        return date2;
+    }
+
+    /**
+     * @param date2 the date2 to set
+     */
+    public void setDate2(Date date2) {
+        this.date2 = date2;
+        System.out.println("Date ....." + this.date2);
+
+        getDays().put(this.key, date2);
+        this.key += this.key + 1;
+
+        for (Map.Entry<Integer, Date> map : getDays().entrySet()) {
+            getConvertListDays().add(map.getValue());
+            System.out.println("List: " + map.getValue().toString());
+        }
+    }
+
+    /**
+     * @return the invalidDates
+     */
+    public List<Date> getInvalidDates() {
+        return invalidDates;
+    }
+
+    /**
+     * @param invalidDates the invalidDates to set
+     */
+    public void setInvalidDates(List<Date> invalidDates) {
+        this.invalidDates = invalidDates;
+    }
+
+    /**
+     * @return the invalidDays
+     */
+    public List<Integer> getInvalidDays() {
+        return invalidDays;
+    }
+
+    /**
+     * @param invalidDays the invalidDays to set
+     */
+    public void setInvalidDays(List<Integer> invalidDays) {
+        this.invalidDays = invalidDays;
+    }
+
+    /**
+     * @return the minDate
+     */
+    public Date getMinDate() {
+        return minDate;
+    }
+
+    /**
+     * @param minDate the minDate to set
+     */
+    public void setMinDate(Date minDate) {
+        this.minDate = minDate;
+    }
+
+    /**
+     * @return the maxDate
+     */
+    public Date getMaxDate() {
+        return maxDate;
+    }
+
+    /**
+     * @param maxDate the maxDate to set
+     */
+    public void setMaxDate(Date maxDate) {
+        this.maxDate = maxDate;
+    }
+
+    /**
+     * @return the minTime
+     */
+    public Date getMinTime() {
+        return minTime;
+    }
+
+    /**
+     * @param minTime the minTime to set
+     */
+    public void setMinTime(Date minTime) {
+        this.minTime = minTime;
+    }
+
+    /**
+     * @return the maxTime
+     */
+    public Date getMaxTime() {
+        return maxTime;
+    }
+
+    /**
+     * @param maxTime the maxTime to set
+     */
+    public void setMaxTime(Date maxTime) {
+        this.maxTime = maxTime;
+    }
+
+    /**
+     * @return the minDateTime
+     */
+    public Date getMinDateTime() {
+        return minDateTime;
+    }
+
+    /**
+     * @param minDateTime the minDateTime to set
+     */
+    public void setMinDateTime(Date minDateTime) {
+        this.minDateTime = minDateTime;
+    }
+
+    /**
+     * @return the maxDateTime
+     */
+    public Date getMaxDateTime() {
+        return maxDateTime;
+    }
+
+    /**
+     * @param maxDateTime the maxDateTime to set
+     */
+    public void setMaxDateTime(Date maxDateTime) {
+        this.maxDateTime = maxDateTime;
+    }
+
+    /**
+     * @return the dateDe
+     */
+    public Date getDateDe() {
+        return dateDe;
+    }
+
+    /**
+     * @param dateDe the dateDe to set
+     */
+    public void setDateDe(Date dateDe) {
+        this.dateDe = dateDe;
+    }
+
+    /**
+     * @return the dateTimeDe
+     */
+    public Date getDateTimeDe() {
+        return dateTimeDe;
+    }
+
+    /**
+     * @param dateTimeDe the dateTimeDe to set
+     */
+    public void setDateTimeDe(Date dateTimeDe) {
+        this.dateTimeDe = dateTimeDe;
+    }
+
+    /**
+     * @return the days
+     */
+    public Map<Integer, Date> getDays() {
+        return days;
+    }
+
+    /**
+     * @param days the days to set
+     */
+    public void setDays(Map<Integer, Date> days) {
+        this.days = days;
+    }
+
+    /**
+     * @return the convertListDays
+     */
+    public List<Date> getConvertListDays() {
+        return convertListDays;
+    }
+
+    /**
+     * @param convertListDays the convertListDays to set
+     */
+    public void setConvertListDays(List<Date> convertListDays) {
+        this.convertListDays = convertListDays;
+    }
+
+    /**
+     * @return the day
+     */
+    public Date getDay() {
+        return day;
+    }
+
+    /**
+     * @param day the day to set
+     */
+    public void setDay(Date day) {
+        this.day = day;
+    }
+
+    /**
+     * @return the key
+     */
+    public static int getKey() {
+        return key;
+    }
+
+    /**
+     * @param aKey the key to set
+     */
+    public static void setKey(int aKey) {
+        key = aKey;
     }
 
 }
