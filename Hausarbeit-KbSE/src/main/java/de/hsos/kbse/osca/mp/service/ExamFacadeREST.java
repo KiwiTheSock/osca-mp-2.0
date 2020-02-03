@@ -63,10 +63,10 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
         LocalTime st = LocalTime.parse(start);
         Time time1 = Time.valueOf(st);
 
-        LocalTime end = LocalTime.parse(start);
+        LocalTime end = LocalTime.parse(finish);
         Time time2 = Time.valueOf(end);
 
-        Exam exam = new Exam(date, 20.3, time1, time2, 4);
+        Exam exam = new Exam(date, duration, time1, time2, spaceforstudents);
         super.create(exam);
 //        try {
 //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();

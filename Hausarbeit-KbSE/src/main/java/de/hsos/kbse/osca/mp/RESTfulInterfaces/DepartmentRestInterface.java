@@ -42,7 +42,7 @@ public interface DepartmentRestInterface {
      * @return
      */
     @PUT
-    @Path("update/{modulname}")
+    @Path("updateModul/{modulname}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateDepartmentModulname(
             @PathParam("modulname") String modulname,
@@ -55,7 +55,7 @@ public interface DepartmentRestInterface {
      * @return
      */
     @PUT
-    @Path("update/{modulname}")
+    @Path("updateSemester/{modulname}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateDepartmentSemester(
             @PathParam("modulname") String modulname,
