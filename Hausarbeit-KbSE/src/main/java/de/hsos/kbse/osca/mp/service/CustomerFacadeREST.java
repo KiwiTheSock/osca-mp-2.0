@@ -33,7 +33,7 @@ import javax.ws.rs.core.Response;
  */
 @RequestScoped
 @Path("de.hsos.kbse.osca.mp.entity.customer")
-public class CustomerFacadeREST extends AbstractFacade<Customer> implements CustomerRestInterface {
+public class CustomerFacadeREST implements CustomerRestInterface {
 
     @Inject
     private CustomerRepository repo;
@@ -42,7 +42,7 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     private EntityManager em;
 
     public CustomerFacadeREST() {
-        super(Customer.class);
+//        super(Customer.class);
     }
 
     /**
@@ -58,7 +58,7 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
             }
             return Response
                     .status(Response.Status.FOUND)
-                    .entity(getJsonb().toJson(all)).build();
+                    .entity(this.repo.getJsonb().toJson(all)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
@@ -77,7 +77,7 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
             }
             return Response
                     .status(Response.Status.FOUND)
-                    .entity(getJsonb().toJson(all)).build();
+                    .entity(this.repo.getJsonb().toJson(all)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
@@ -96,7 +96,7 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
             }
             return Response
                     .status(Response.Status.FOUND)
-                    .entity(getJsonb().toJson(all)).build();
+                    .entity(this.repo.getJsonb().toJson(all)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
@@ -115,8 +115,9 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     public Response createStudent(String firstname, String lastname, String email, String login, String password) {
         Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
         try {
-            super.create(cus);
-            return Response.ok(getJsonb().toJson(cus)).build();
+//            super.create(cus);
+            this.repo.create(cus);
+            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -135,8 +136,9 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     public Response createDozent(String firstname, String lastname, String email, String login, String password) {
         Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
         try {
-            super.create(cus);
-            return Response.ok(getJsonb().toJson(cus)).build();
+//            super.create(cus);
+this.repo.create(cus);
+            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -155,8 +157,9 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     public Response createAdmin(String firstname, String lastname, String email, String login, String password) {
         Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
         try {
-            super.create(cus);
-            return Response.ok(getJsonb().toJson(cus)).build();
+//            super.create(cus);
+this.repo.create(cus);
+            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -167,14 +170,15 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Long id, Customer entity
     ) {
-        super.edit(entity);
+//        super.edit(entity);
+this.repo.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") Long id
     ) {
-        super.remove(super.find(id));
+        this.repo.remove(this.repo.find(id));
     }
 
     @GET
@@ -182,14 +186,14 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Customer find(@PathParam("id") Long id
     ) {
-        return super.find(id);
+        return this.repo.find(id);
     }
 
     @GET
-    @Override
+//    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Customer> findAll() {
-        return super.findAll();
+        return this.repo.findAll();
     }
 
     @GET
@@ -198,17 +202,17 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     public List<Customer> findRange(@PathParam("from") Integer from,
             @PathParam("to") Integer to
     ) {
-        return super.findRange(new int[]{from, to});
+        return this.repo.findRange(new int[]{from, to});
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
-        return String.valueOf(super.count());
+        return String.valueOf(this.repo.count());
     }
 
-    @Override
+//    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
@@ -222,8 +226,8 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
             cus.setLastname(lastname);
             cus.setPassword(password);
             cus.setLogin(newLogin);
-            this.edit(cus);
-            return Response.ok(getJsonb().toJson(cus)).build();
+            this.repo.edit(cus);
+            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NoResultException e) {
             throw e;
         }
@@ -234,7 +238,7 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
         try {
             Customer cus = this.repo.getByLogin(login);
             return Response
-                    .ok(getJsonb().toJson(cus)).build();
+                    .ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -244,8 +248,9 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     public Response deleteCustomer(String login) {
         try {
             Customer cus = this.repo.getByLogin(login);
+            this.repo.remove(cus);
             return Response
-                    .accepted(getJsonb().toJson(cus)).build();
+                    .accepted(this.repo.getJsonb().toJson(cus)).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

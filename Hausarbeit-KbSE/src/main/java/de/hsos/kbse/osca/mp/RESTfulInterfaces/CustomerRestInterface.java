@@ -27,8 +27,6 @@ import javax.ws.rs.core.Response;
  *
  * @author nordm
  */
-//@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface CustomerRestInterface {
 
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

@@ -14,6 +14,9 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -25,9 +28,15 @@ import javax.persistence.TypedQuery;
  *
  * @author Philipp
  */
+@Named
 @ApplicationScoped
 public class CustomerRepository extends AbstractFacade<Customer> {
 
+    
+    @Inject
+    private Jsonb jsonb;
+    
+    
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -97,4 +106,21 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         return em;
     }
 
+    public Jsonb getJsonb() {
+        return jsonb;
+    }
+
+    public void setJsonb(Jsonb jsonb) {
+        this.jsonb = jsonb;
+    }
+
+//    public EntityManager getEm() {
+//        return em;
+//    }
+//
+//    public void setEm(EntityManager em) {
+//        this.em = em;
+//    }
+
+    
 }
