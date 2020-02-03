@@ -66,5 +66,8 @@ public class DepartmentRepository extends AbstractFacade<Department> {
     public void setJsonb(Jsonb jsonb) {
         this.jsonb = jsonb;
     }
-
+    
+        public Jsonb getJsonb() {
+        return jsonb;
+    }
 }
