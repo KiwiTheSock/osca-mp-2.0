@@ -75,9 +75,11 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
                     return null;
                 //Dozent 
                 case 1:
+                    System.out.println("Case 1:");
                     return "modulAnlegenDozent.xhtml?faces-redirect=true";
                 //Student
                 case 2:
+                    System.out.println("Case 2:");
                     return "modulAuswahlStudent.xhtml?faces-redirect=true";
 
                 default:

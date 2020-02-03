@@ -43,7 +43,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     public void init() {
         
         //Load all Departments
-        //fillModules();
+        //fillDepartments();
         
         setModuls(new HashMap<>());
         setTimes(new HashMap<>());
@@ -53,9 +53,9 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         getStudents().put("Stud TestDos", "Stud TestDos");
         getStudents().put("Stud TestTres", "Stud TestTres");
 
-        /*        getModuls().put("Mathe1", "Mathe 1");
+        getModuls().put("Mathe1", "Mathe 1");
         getModuls().put("KBSE", "KBSE");
-        getModuls().put("OOAD", "OOAD");*/
+        getModuls().put("OOAD", "OOAD");
 
         getTimes().put("13:00", "13:00");
         getTimes().put("14:00", "14:00");
@@ -79,7 +79,13 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         getDayTime().put("15.10.2019", getTimes());
     }
     
-    public void fillModules() {
+    
+    /**
+     * 
+     *
+     * 
+     */
+    public void fillDepartments() {
         List<Department> tmp = this.Departments.getAll();
         tmp.forEach((_item) -> {
             getModuls().put(_item.getSemester(), _item.getModulename());

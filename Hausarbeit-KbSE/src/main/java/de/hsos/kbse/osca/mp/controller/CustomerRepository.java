@@ -41,7 +41,7 @@ public class CustomerRepository extends AbstractFacade<Customer> {
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
             super.create(new Customer("Administrator", "Administrator", "admin@hs-osnabrueck.de", "admin", "admin", 0));
-            super.create(new Customer("Alias", "Dozent", "chef@hs-osnabrueck.de", "x", "x", 1));
+            //super.create(new Customer("Alias", "Dozent", "chef@hs-osnabrueck.de", "x", "x", 1));
             super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "x", "x", 1));
             super.create(new Customer("Philipp", "Markmann", "pmarkman@hs-osnabrueck.de", "pmarkman", "asdf", 2));
             super.create(new Customer("Leander", "Nordmann", "nordmann@hs-osnabrueck.de", "lnordmann", "x", 2));

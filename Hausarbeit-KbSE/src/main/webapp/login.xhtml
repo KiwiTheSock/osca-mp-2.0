@@ -34,15 +34,15 @@
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
                         <p:outputLabel for="username" value="Benutzername: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-                        <p:inputText id="username" placeholder="Name" style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                        <p:inputText id="username" placeholder="Name" value="#{loginQuery.username}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                         <p:outputLabel for="passwordUser" value="Passwort: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
-                        <p:inputText id="passwordUser" placeholder="Passwort" style="font-family: Andale Mono, monospace; font-size: 14px"/>
+                        <p:inputText id="passwordUser" placeholder="Passwort" value="#{loginQuery.password}" style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                         <p:commandButton style="font-family: Andale Mono, monospace; margin-top: 50px; font-size: 15px" 
                                          value="Einloggen"
                                          icon="pi pi-sign-in"
-                                         action="#{dropdownViewDozent.redirect('modulAuswahlStudent.xhtml')}"
+                                         action="#{loginQuery.login()}"
                                          />
 
                     </h:panelGrid>

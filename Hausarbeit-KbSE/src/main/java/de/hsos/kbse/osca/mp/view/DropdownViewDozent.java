@@ -5,6 +5,8 @@
  */
 package de.hsos.kbse.osca.mp.view;
 
+import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
+import de.hsos.kbse.osca.mp.entity.Department;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ import java.util.GregorianCalendar;
  */
 @Named
 @ViewScoped
-public class DropdownViewDozent implements Serializable {
+public class DropdownViewDozent extends AbstractRepoAccesor implements Serializable {
 
     // Listen zum Anlegen des Moduls
     private Map<String, String> terms = new HashMap<>();
@@ -50,7 +52,7 @@ public class DropdownViewDozent implements Serializable {
     private String text;
     private String modulName;
     private String examMin = "10:00";
-    private String examMax = "15:00";
+    private String examMax = "16:00";
     private int duration = 30;
     private int studentCount = 1;
     // Booleans zum Ueberpruefen
@@ -173,7 +175,7 @@ public class DropdownViewDozent implements Serializable {
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-        System.out.println("DatetimeDE: " + getDateTimeDe());
+        System.out.println("Hier wird EXAM angelegt!\nTag: "+getDate2()+"\nDuration:"+this.duration+"\nStarzeit: " + getExamMin()+"\nEndzeit: "+getExamMax()+"\nAmount of Space: "+this.studentCount+"\nFür Module: "+this.modulName);
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
@@ -380,6 +382,7 @@ public class DropdownViewDozent implements Serializable {
     public void setButtonCheck(boolean buttonCheck) {
         System.out.println("CHECK");
         this.buttonCheck = buttonCheck;
+        this.Departments.add(new Department(this.term,"Semester X"));
     }
 
     /**
