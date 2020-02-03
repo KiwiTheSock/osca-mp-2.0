@@ -14,6 +14,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -111,13 +112,13 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
      * @return
      */
     @Override
-    public Customer createStudent(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
+    public Response createStudent(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
         try {
             super.create(cus);
-            return cus;
+            return Response.ok(getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return null;
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
@@ -131,13 +132,13 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
      * @return
      */
     @Override
-    public Customer createDozent(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
+    public Response createDozent(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
         try {
             super.create(cus);
-            return cus;
+            return Response.ok(getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return null;
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
@@ -151,13 +152,13 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
      * @return
      */
     @Override
-    public Customer createAdmin(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = repo.createCustomer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
+    public Response createAdmin(String firstname, String lastname, String email, String login, String password) {
+        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
         try {
             super.create(cus);
-            return cus;
+            return Response.ok(getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return null;
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
@@ -213,13 +214,41 @@ public class CustomerFacadeREST extends AbstractFacade<Customer> implements Cust
     }
 
     @Override
-    public Customer updateCustomer(String login, String firstname, String lastname, String email, String password) {
-        return this.getEntityManager().find(Customer.class, login);
+    public Response updateCustomer(String login, String newLogin, String firstname, String lastname, String email, String password) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setFirstname(firstname);
+            cus.setEmail(email);
+            cus.setLastname(lastname);
+            cus.setPassword(password);
+            cus.setLogin(newLogin);
+            this.edit(cus);
+            return Response.ok(getJsonb().toJson(cus)).build();
+        } catch (NoResultException e) {
+            throw e;
+        }
     }
 
     @Override
-    public Customer findCustomerByLogin(String login) {
-        return this.getEntityManager().find(Customer.class, login);
+    public Response findCustomerByLogin(String login) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            return Response
+                    .ok(getJsonb().toJson(cus)).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @Override
+    public Response deleteCustomer(String login) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            return Response
+                    .accepted(getJsonb().toJson(cus)).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 }

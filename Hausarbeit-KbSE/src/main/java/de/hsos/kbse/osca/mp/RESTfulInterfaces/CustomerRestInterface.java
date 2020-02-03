@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -26,22 +27,24 @@ import javax.ws.rs.core.Response;
  *
  * @author nordm
  */
-@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface CustomerRestInterface {
 
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @POST
     @Path("student")
-    public Customer createStudent(
+    public Response createStudent(
             @QueryParam("firstname") String firstname,
             @QueryParam("lastname") String lastname,
             @QueryParam("email") String email,
             @QueryParam("login") String login,
             @QueryParam("password") String password);
 
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @POST
     @Path("dozent")
-    public Customer createDozent(
+    public Response createDozent(
             @QueryParam("firstname") String firstname,
             @QueryParam("lastname") String lastname,
             @QueryParam("email") String email,
@@ -50,7 +53,8 @@ public interface CustomerRestInterface {
 
     @POST
     @Path("admin")
-    public Customer createAdmin(
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response createAdmin(
             @QueryParam("firstname") String firstname,
             @QueryParam("lastname") String lastname,
             @QueryParam("email") String email,
@@ -58,27 +62,44 @@ public interface CustomerRestInterface {
             @QueryParam("password") String password);
 
     @PUT
-    @Path("{login}")
-    public Customer updateCustomer(
+    @Path("update/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomer(
             @PathParam("login") String login,
+            @QueryParam("newLogin") String newLogin,
             @QueryParam("firstname") String firstname,
             @QueryParam("lastname") String lastname,
             @QueryParam("email") String email,
             @QueryParam("password") String password
     );
 
-    @GET
+    @DELETE
     @Path("{login}")
-    public Customer findCustomerByLogin(@PathParam("login") String login);
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response deleteCustomer(
+            @PathParam("login") String login);
 
+    /**
+     *
+     * @param login
+     * @return
+     */
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @GET
+    @Path("login/{login}")
+    public Response findCustomerByLogin(@PathParam("login") String login);
+
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @GET
     @Path("dozents")
     public Response findAllDozents();
 
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @GET
     @Path("students")
     public Response findAllStudents();
 
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @GET
     @Path("admins")
     public Response findAllAdmins();

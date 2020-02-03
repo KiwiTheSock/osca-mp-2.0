@@ -15,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -41,8 +42,8 @@ public class CustomerRepository extends AbstractFacade<Customer> {
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
             super.create(new Customer("Administrator", "Administrator", "admin@hs-osnabrueck.de", "admin", "admin", 0));
-            super.create(new Customer("Alias", "Dozent", "chef@hs-osnabrueck.de", "x", "x", 1));
-            super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "x", "x", 1));
+            super.create(new Customer("Alias", "Dozent", "chef@hs-osnabrueck.de", "chef", "x", 1));
+            super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "boss", "x", 1));
             super.create(new Customer("Philipp", "Markmann", "pmarkman@hs-osnabrueck.de", "pmarkman", "asdf", 2));
             super.create(new Customer("Leander", "Nordmann", "nordmann@hs-osnabrueck.de", "lnordmann", "x", 2));
             this.getEntityManager().persist(new Department("OOAD", "SOSE2020"));
@@ -55,37 +56,33 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         }
     }
 
-    public List<Customer> findAllDozents() {
+    public Collection<Customer> findAllFromType(int accessType) {
         TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.DOZENT.getLevelCode());
+        query.setParameter("type", accessType);
         return query.getResultList();
     }
 
-//    public Customer findByLogin(String login) {
-//        return this.getEntityManager().find(Customer.class,login);
-//    }
-
-    public Customer createCustomer(String firstname, String lastname, String email, String login, String password, int accessType) {
-        return new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
+    public Collection<Customer> findAllDozents() {
+        return this.findAllFromType(AccessType.DOZENT.getLevelCode());
     }
 
     public Collection<Customer> findAllStudents() {
-        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.STUDENT.getLevelCode());
-        return query.getResultList();
+        return this.findAllFromType(AccessType.STUDENT.getLevelCode());
     }
 
-    public List<Customer> findAllAdmins() {
-        TypedQuery<Customer> query = em.createNamedQuery("Customer.findByType", Customer.class);
-        query.setParameter("type", AccessType.ADMINISTRATOR.getLevelCode());
-        return query.getResultList();
+    public Collection<Customer> findAllAdmins() {
+        return this.findAllFromType(AccessType.ADMINISTRATOR.getLevelCode());
     }
 
     public Customer getByLogin(String login) {
-        System.out.print("SQL: get " + login);
-        TypedQuery<Customer> query;
-        query = this.getEntityManager().createNamedQuery("Customer.findByLogin", Customer.class);
-        return query.setParameter("login", login).getSingleResult();
+        try {
+            System.out.print("SQL: get " + login);
+            TypedQuery<Customer> query;
+            query = this.getEntityManager().createNamedQuery("Customer.findByLogin", Customer.class);
+            return query.setParameter("login", login).getSingleResult();
+        } catch (NoResultException e) {
+            throw e;
+        }
     }
 
     public List<Customer> getAll() {
