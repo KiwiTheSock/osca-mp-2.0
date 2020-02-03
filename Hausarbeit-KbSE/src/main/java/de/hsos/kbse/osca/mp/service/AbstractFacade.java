@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
  * @author nordm
  * @param <T>
  */
-@Named
+
 @Transactional
 public abstract class AbstractFacade<T> {
 

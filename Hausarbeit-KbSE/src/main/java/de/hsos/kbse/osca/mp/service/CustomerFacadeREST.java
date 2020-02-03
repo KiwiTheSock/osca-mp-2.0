@@ -137,7 +137,7 @@ public class CustomerFacadeREST implements CustomerRestInterface {
         Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
         try {
 //            super.create(cus);
-this.repo.create(cus);
+            this.repo.create(cus);
             return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -158,7 +158,7 @@ this.repo.create(cus);
         Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
         try {
 //            super.create(cus);
-this.repo.create(cus);
+            this.repo.create(cus);
             return Response.ok(this.repo.getJsonb().toJson(cus)).build();
         } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -171,7 +171,7 @@ this.repo.create(cus);
     public void edit(@PathParam("id") Long id, Customer entity
     ) {
 //        super.edit(entity);
-this.repo.edit(entity);
+        this.repo.edit(entity);
     }
 
     @DELETE
