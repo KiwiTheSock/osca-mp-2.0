@@ -50,7 +50,7 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
             @QueryParam("tag") String tag,
             @QueryParam("start") String start,
             @QueryParam("finish") String finish,
-            @QueryParam("duration") Double duration,
+            @QueryParam("duration") Integer duration,
             @QueryParam("spaceforstudents") Integer spaceforstudents
     ) throws ParseException {
 
@@ -60,13 +60,13 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = simpleDateFormat.parse(tag);
 
-        LocalTime st = LocalTime.parse(start);
+        /*        LocalTime st = LocalTime.parse(start);
         Time time1 = Time.valueOf(st);
-
+        
         LocalTime end = LocalTime.parse(finish);
-        Time time2 = Time.valueOf(end);
+        Time time2 = Time.valueOf(end);*/
 
-        Exam exam = new Exam(date, duration, time1, time2, spaceforstudents);
+        Exam exam = new Exam(date, duration, start, finish, spaceforstudents);
         super.create(exam);
 //        try {
 //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();

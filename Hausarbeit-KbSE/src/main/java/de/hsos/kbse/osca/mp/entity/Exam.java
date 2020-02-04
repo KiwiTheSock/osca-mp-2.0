@@ -6,7 +6,6 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
-import java.sql.Time;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -38,24 +37,21 @@ public class Exam extends AbstractEntity {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date datum;
 
-    private Double duration;
+    private Integer duration;
 
-    private Time beginn;
+    private String beginn;
 
-    private Time finish;
+    private String finish;
     
     private Integer spaceforstudents;
 
     @OneToMany(cascade = {CascadeType.ALL})
     private Set<Department> department;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    private Set<Timeslot> timeslotSet;
-
     public Exam() {
     }
 
-    public Exam(Date day, Double duration, Time start, Time finish, Integer spaceforstudents) {
+    public Exam(Date day, Integer duration, String start, String finish, Integer spaceforstudents) {
         this.datum = day;
         this.duration = duration;
         this.beginn = start;
@@ -65,19 +61,19 @@ public class Exam extends AbstractEntity {
     
     
     
-    public Date getStart() {
+    public String getStart() {
         return beginn;
     }
 
-    public void setStart(Time start) {
+    public void setStart(String start) {
         this.beginn = start;
     }
 
-    public Date getFinish() {
+    public String getFinish() {
         return finish;
     }
 
-    public void setFinish(Time finish) {
+    public void setFinish(String finish) {
         this.finish = finish;
     }
 
@@ -89,19 +85,20 @@ public class Exam extends AbstractEntity {
         this.department = department;
     }
 
-    Set<Timeslot> getTimeslotSet() {
-        return timeslotSet;
+    //Timeslot wird in voraussichtlich in Exam integriert
+    /*    Set<Timeslot> getTimeslotSet() {
+    return this.timeslotSet;
     }
+    
+    public void setStringslotSet(Set<Timeslot> timeslotSet) {
+    this.timeslotSet = timeslotSet;
+    }*/
 
-    public void setTimeslotSet(Set<Timeslot> timeslotSet) {
-        this.timeslotSet = timeslotSet;
-    }
-
-    public Double getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(Double duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -121,11 +118,11 @@ public class Exam extends AbstractEntity {
         this.datum = datum;
     }
 
-    public Time getBeginn() {
+    public String getBeginn() {
         return beginn;
     }
 
-    public void setBeginn(Time beginn) {
+    public void setBeginn(String beginn) {
         this.beginn = beginn;
     }
 
@@ -138,7 +135,6 @@ public class Exam extends AbstractEntity {
         hash = 19 * hash + Objects.hashCode(this.finish);
         hash = 19 * hash + Objects.hashCode(this.spaceforstudents);
         hash = 19 * hash + Objects.hashCode(this.department);
-        hash = 19 * hash + Objects.hashCode(this.timeslotSet);
         return hash;
     }
 
@@ -172,15 +168,12 @@ public class Exam extends AbstractEntity {
         if (!Objects.equals(this.department, other.department)) {
             return false;
         }
-        if (!Objects.equals(this.timeslotSet, other.timeslotSet)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Exam{" + "datum=" + datum + ", duration=" + duration + ", beginn=" + beginn + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", department=" + department + ", timeslotSet=" + timeslotSet + '}';
+        return "Exam{" + "datum=" + datum + ", duration=" + duration + ", beginn=" + beginn + ", finish=" + finish + ", spaceforstudents=" + spaceforstudents + ", department=" + department + '}';
     }
     
     

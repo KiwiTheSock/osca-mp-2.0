@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.view;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Department;
+import de.hsos.kbse.osca.mp.entity.Exam;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -62,12 +64,12 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     private boolean checkIsStudent = false;
 
     //Dropdown Kalender
-        // Listen zum Verwalten des Kalenders
+    // Listen zum Verwalten des Kalenders
     private List<Date> invalidDates;
     private List<Integer> invalidDays;
     private Map<Integer, Date> days = new HashMap<>();
     private List<Date> convertListDays = new ArrayList<>();
-        // Variablen fuer den Kalender
+    // Variablen fuer den Kalender
     private Date date2;
     private Date minDate;
     private Date maxDate;
@@ -175,8 +177,19 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-        System.out.println("Hier wird EXAM angelegt!\nTag: "+getDate2()+"\nDuration:"+this.duration+"\nStarzeit: " + getExamMin()+"\nEndzeit: "+getExamMax()+"\nAmount of Space: "+this.studentCount+"\nFür Module: "+this.modulName);
+        //Date day, Double duration, Time start, Time finish, Integer spaceforstudents
+        this.Exams.add(new Exam(getDate2(), this.duration, getExamMin(), getExamMax(), this.studentCount));
+        System.out.println("Hier wird EXAM angelegt!\nTag: " + getDate2() + "\nDuration:" + this.duration + "\nStarzeit: " + getExamMin() + "\nEndzeit: " + getExamMax() + "\nAmount of Space: " + this.studentCount + "\nFür Module: " + this.modulName);
+        persisExam();
         FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public Exam persisExam() {
+        
+        int tges = Integer.parseInt(getExamMax()) - Integer.parseInt(getExamMin());
+        int slotges = (tges * 60)/this.duration;
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()\nGesamtzeit: " + tges + "\nSlotanzahl: "+slotges);
+        return null;
     }
 
     // Nachricht fuer das Anlegen eines Moduls
@@ -382,7 +395,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     public void setButtonCheck(boolean buttonCheck) {
         System.out.println("CHECK");
         this.buttonCheck = buttonCheck;
-        this.Departments.create(new Department(this.term,"Semester X"));
+        this.Departments.create(new Department(this.term, "Semester X"));
     }
 
     /**
