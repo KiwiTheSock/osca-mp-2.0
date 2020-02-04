@@ -92,9 +92,9 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         });
     }
     
-    public void fillDays() {
-        List<Exam> tmp = this.Exams.getAllDaybyDepartment();
-    }
+    /*public void fillDays() {
+    List<Exam> tmp = this.Exams.getAllDaybyDepartment();
+    }*/
 
     // Nachricht fuer Bestaetigung/Freigeben des Termins
     public void displayLog() {

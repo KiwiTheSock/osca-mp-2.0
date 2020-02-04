@@ -1,13 +1,12 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package de.hsos.kbse.osca.mp.service;
 
 import de.hsos.kbse.osca.mp.entity.Exam;
 import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -43,47 +42,47 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
     public ExamFacadeREST() {
         super(Exam.class);
     }
-
+    /*
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response createExam(
-            @QueryParam("tag") String tag,
-            @QueryParam("start") String start,
-            @QueryParam("finish") String finish,
-            @QueryParam("duration") Integer duration,
-            @QueryParam("spaceforstudents") Integer spaceforstudents
+    @QueryParam("tag") String tag,
+    @QueryParam("start") String start,
+    @QueryParam("finish") String finish,
+    @QueryParam("duration") Integer duration,
+    @QueryParam("spaceforstudents") Integer spaceforstudents
     ) throws ParseException {
+    
+    //        GregorianCalendar calender3 = new GregorianCalendar(Locale.GERMANY);
+    //        calender3.set(2015, 03, 12, 16, 00);
+    //        Date finish1 = calender3.getTime();
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    Date date = simpleDateFormat.parse(tag);
+    
+    LocalTime st = LocalTime.parse(start);
+    Time time1 = Time.valueOf(st);
+    
+    LocalTime end = LocalTime.parse(finish);
+    Time time2 = Time.valueOf(end);
+    
+    Exam exam = new Exam(date, duration, time1, time2, spaceforstudents);
+    super.create(exam);
+    //        try {
+    //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
+    //        } catch (Exception e) {
+    return Response.status(200)
+    .entity("newEntity : " + exam.getDatum() + " with " + exam.getDuration()
+    + " and " + exam.getBeginn() + " and " + exam.getFinish()).build();
+    //        }
+    
+    }*/
 
-//        GregorianCalendar calender3 = new GregorianCalendar(Locale.GERMANY);
-//        calender3.set(2015, 03, 12, 16, 00);
-//        Date finish1 = calender3.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = simpleDateFormat.parse(tag);
-
-        /*        LocalTime st = LocalTime.parse(start);
-        Time time1 = Time.valueOf(st);
-        
-        LocalTime end = LocalTime.parse(finish);
-        Time time2 = Time.valueOf(end);*/
-
-        Exam exam = new Exam(date, duration, start, finish, spaceforstudents);
-        super.create(exam);
-//        try {
-//            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
-//        } catch (Exception e) {
-        return Response.status(200)
-                .entity("newEntity : " + exam.getDatum() + " with " + exam.getDuration()
-                        + " and " + exam.getStart() + " and " + exam.getFinish()).build();
-//        }
-
+    @POST
+    @Override
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void create(Exam entity) {
+        super.create(entity);
     }
-
-//    @POST
-//    @Override
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void create(Exam entity) {
-//        super.create(entity);
-//    }
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

@@ -25,9 +25,16 @@ import javax.inject.Named;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import jdk.nashorn.internal.objects.NativeArray;
 
 /**
  *
@@ -169,7 +176,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     }
 
     // Nachricht fuer den Tag des Kalenders
-    public void displayLogDate() {
+    public void displayLogDate() throws ParseException {
         FacesMessage msg;
         if (getDate2() != null) {
 
@@ -178,18 +185,64 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
         //Date day, Double duration, Time start, Time finish, Integer spaceforstudents
-        this.Exams.add(new Exam(getDate2(), this.duration, getExamMin(), getExamMax(), this.studentCount));
-        System.out.println("Hier wird EXAM angelegt!\nTag: " + getDate2() + "\nDuration:" + this.duration + "\nStarzeit: " + getExamMin() + "\nEndzeit: " + getExamMax() + "\nAmount of Space: " + this.studentCount + "\nFür Module: " + this.modulName);
-        persisExam();
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        java.sql.Time startTime = new java.sql.Time(formatter.parse(getExamMin()).getTime());
+        java.sql.Time endTime = new java.sql.Time(formatter.parse(getExamMax()).getTime());
+        //this.Exams.add(new Exam(getDate2(), this.duration, getExamMin(), getExamMax(), this.studentCount));
+        System.out.println("Hier wird EXAM angelegt!\nTag: " + getDate2() + "\nDuration:" + this.duration + "\nStarzeit: " + startTime + "\nEndzeit: " + endTime + "\nAmount of Space: " + this.studentCount + "\nFür Module: " + this.modulName);
+        persisExam(startTime, endTime);
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
-    public Exam persisExam() {
-        
-        int tges = Integer.parseInt(getExamMax()) - Integer.parseInt(getExamMin());
-        int slotges = (tges * 60)/this.duration;
-        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()\nGesamtzeit: " + tges + "\nSlotanzahl: "+slotges);
-        return null;
+    public void persisExam(Time start, Time end) throws ParseException {
+
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()");
+        //Anzahl der Prüfung berechnen
+        int tges = end.getHours() - start.getHours();
+        int slotges = (tges * 60) / this.duration;
+
+        //Berechnung des nächsten Termin + duration
+        java.sql.Time myStartTime = start;
+        java.sql.Time myEndTime = end;
+        LocalTime localStartTime = myStartTime.toLocalTime();
+        LocalTime localEndTime = myEndTime.toLocalTime();
+
+        LocalTime setTimeStart;
+        LocalTime setTimeEnd;
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()\nGesamtzeit: " + tges + "\nSlotanzahl: " + slotges);
+
+        List<Exam> exams = new ArrayList<>();
+
+        for (int i = 1; i <= slotges; i++) {
+
+            Exam tmp = new Exam();
+            tmp.setDatum(getDate2());
+            tmp.setDuration(this.duration);
+            tmp.setSpaceforstudents(this.studentCount);
+            System.out.println("Slot:" + i);
+            //setTimeStart = localStartTime;
+
+            //times.add(setTimeStart);
+            System.out.println("Anfang: " + localStartTime.toString());
+            tmp.setBeginn(Time.valueOf(localStartTime));
+            localStartTime = localStartTime.plusMinutes(this.duration);
+            tmp.setFinish(Time.valueOf(localStartTime));
+            //setTimeEnd = localStartTime;
+            //times.add(setTimeEnd);
+            System.out.println("Ende: " + localStartTime.toString());
+            //tmp.setDepartment(this.modulName);
+            Department department = this.Departments.getByModulname(this.modulName);
+            department.addExam(tmp);
+            //tmp.getDepartment().add(tt);
+            //tmp.getDepartment().add(this.Departments.getByModulname(this.modulName)); //Worked nicht
+            exams.add(tmp);
+
+        }
+
+        exams.forEach((exam) -> {
+            this.Exams.create(exam);
+        });
+
     }
 
     // Nachricht fuer das Anlegen eines Moduls
@@ -203,6 +256,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Parameter nicht ausgewaehlt.");
         }
 
+        this.Departments.create(new Department(this.modulName, this.term));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 

@@ -5,36 +5,52 @@
  */
 package de.hsos.kbse.osca.mp.controller;
 
-import de.hsos.kbse.osca.mp.abstracts.AbstractRepository;
-import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
-import java.util.List;
+import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import javax.enterprise.context.RequestScoped;
-import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Philipp
  */
 @RequestScoped
-public class ExamRepository extends AbstractRepository<Exam> {
+public class ExamRepository extends AbstractFacade<Exam> {
+
+    @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
     public ExamRepository() {
-        this.entityClass = Exam.class;
+        super(Exam.class);
     }
 
-    public List<Exam> getAll() {
-        System.out.print("SQL: getAll()");
-        TypedQuery<Exam> query;
-        query = this.em.createNamedQuery("Department.findAll", Exam.class);
-        return query.getResultList();
-    }
+    /*    public void createList(List<Exam> examList) {
     
-    public List<Exam> getAllDaybyDepartment() {
-        System.out.print("SQL: getAllDaysbyDep()");
-        TypedQuery<Exam> query;
-        query = this.em.createNamedQuery("Department.findAll", Exam.class);
-        return query.getResultList();
+    examList.forEach((Exam) -> {
+    super.create(Exam);
+    });
+    
+    System.out.println("Database Initialize\n");
+    }*/
+
+    /*    public List<Exam> getAll() {
+    System.out.print("SQL: getAll()");
+    TypedQuery<Exam> query;
+    query = this.em.createNamedQuery("Department.findAll", Exam.class);
+    return query.getResultList();
+    }*/
+
+    /*    public List<Exam> getAllDaybyDepartment() {
+    System.out.print("SQL: getAllDaysbyDep()");
+    TypedQuery<Exam> query;
+    query = this.em.createNamedQuery("Department.findAll", Exam.class);
+    return query.getResultList();
+    }*/
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
 
 }

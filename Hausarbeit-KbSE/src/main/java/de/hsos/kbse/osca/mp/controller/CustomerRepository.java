@@ -55,10 +55,6 @@ public class CustomerRepository extends AbstractFacade<Customer> {
             super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "x", "x", 1));
             super.create(new Customer("Philipp", "Markmann", "pmarkman@hs-osnabrueck.de", "pmarkman", "asdf", 2));
             super.create(new Customer("Leander", "Nordmann", "nordmann@hs-osnabrueck.de", "lnordmann", "x", 2));
-            this.getEntityManager().persist(new Department("OOAD", "SOSE2020"));
-            this.getEntityManager().persist(new Department("Algorithmen", "SOSE2020"));
-            this.getEntityManager().persist(new Department("SWE", "SOSE2020"));
-            this.getEntityManager().persist(new Department("Datenbanken", "SOSE2020"));
             System.out.println("Database Initialize\n");
         } catch (Exception dinf) {
             throw new IllegalStateException("Something went wrong.");
