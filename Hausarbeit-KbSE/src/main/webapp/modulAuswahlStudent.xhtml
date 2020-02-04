@@ -65,7 +65,7 @@
                         <p:spacer />
 
                     </h:panelGrid>
-                    
+
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                         <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.displayLog}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px;"
@@ -75,6 +75,11 @@
                                          style="font-family: Andale Mono, monospace; font-size: 15px; color: red"
                                          icon="pi pi-times-circle">
                         </p:commandButton>
+                        <p:commandButton value="Logout" 
+                                         style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 10px; color: red"
+                                         icon="pi pi-sign-out"
+                                         action="load">
+                        </p:commandButton>   
                     </h:panelGrid>
                 </p:row>
             </h:form>
