@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -35,6 +36,20 @@ public class Department extends AbstractEntity {
     private String modulename;
     private String semester;
 
+    
+    //ManyToMany 
+    @ManyToMany(mappedBy = "departments")
+    private Set<Customer> customers = new HashSet<>();
+
+    public Set<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Set<Customer> customers) {
+        this.customers = customers;
+    }
+    
+    //OneToMany
     @OneToMany(
             mappedBy = "department",
             cascade = CascadeType.ALL,
@@ -46,10 +61,18 @@ public class Department extends AbstractEntity {
         exams.add(exam);
         exam.setDepart(this);
     }
-
-    public void removeComment(Exam exam) {
+    
+    public void removeExam(Exam exam){
         exams.remove(exam);
-        exam.setDepart(null);
+        exam.setDatum(null);
+    }
+    
+    public Set<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(Set<Exam> exams) {
+        this.exams = exams;
     }
 
     //Constructor
@@ -61,7 +84,7 @@ public class Department extends AbstractEntity {
         this.semester = semester;
     }
 
-    //Getter/Setter
+    //Getter-Setter
     public String getModulename() {
         return modulename;
     }

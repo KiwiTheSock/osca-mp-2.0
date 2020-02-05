@@ -43,11 +43,11 @@
     
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.primefaces.themes/redmond -->
-        <dependency>
+       <!-- <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>all-themes</artifactId>
             <version>1.0.10</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>

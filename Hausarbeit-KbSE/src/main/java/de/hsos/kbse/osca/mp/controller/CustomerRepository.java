@@ -83,6 +83,9 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         return this.findAllFromType(AccessType.ADMINISTRATOR.getLevelCode());
     }
 
+    //Hier Transactional Support 
+    //GET reicht support 
+    //
     public Customer getByLogin(String login) {
         try {
             System.out.print("SQL: get " + login);

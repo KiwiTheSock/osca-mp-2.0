@@ -7,9 +7,11 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -33,24 +35,30 @@ public class ExamRepository extends AbstractFacade<Exam> {
     
     System.out.println("Database Initialize\n");
     }*/
+    public List<Exam> getAll() {
+        System.out.print("SQL: getAll()");
+        TypedQuery<Exam> query;
+        query = this.em.createNamedQuery("Exam.findAll", Exam.class);
+        return query.getResultList();
+    }
 
-    /*    public List<Exam> getAll() {
-    System.out.print("SQL: getAll()");
-    TypedQuery<Exam> query;
-    query = this.em.createNamedQuery("Department.findAll", Exam.class);
-    return query.getResultList();
-    }*/
+    public List<Exam> getAllDaybyDepartment(Long departmentId) {
+        System.out.print("SQL: get all days by " + departmentId);
+        List<Exam> resultList = em.createQuery(
+                "select pc "
+                + "from Exam pc "
+                + "where pc.department.id = :departmentId", Exam.class)
+                .setParameter("departmentId", departmentId)
+                .getResultList();
 
-    /*    public List<Exam> getAllDaybyDepartment() {
-    System.out.print("SQL: getAllDaysbyDep()");
-    TypedQuery<Exam> query;
-    query = this.em.createNamedQuery("Department.findAll", Exam.class);
-    return query.getResultList();
-    }*/
+        return resultList;
+    }
 
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
 
+
+    
 }

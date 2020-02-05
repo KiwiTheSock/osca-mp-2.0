@@ -36,9 +36,7 @@ import javax.persistence.Temporal;
     ,
     @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents")
     ,
-    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.beginn = :beginn")
-    ,
-    @NamedQuery(name = "Exam.findByDepartment", query = "SELECT e FROM Exam e WHERE e.department = :department")})
+    @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.beginn = :beginn")})
 public class Exam extends AbstractEntity {
 
     @Temporal(javax.persistence.TemporalType.DATE)

@@ -6,11 +6,14 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -23,31 +26,57 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CUSTOMER")
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
-    @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id"),
-    @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email"),
-    @NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname"),
-    @NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname"),
-    @NamedQuery(name = "Customer.findByLogin", query = "SELECT c FROM Customer c WHERE c.login = :login"),
-    @NamedQuery(name = "Customer.findIdByLogin", query = "SELECT c.id FROM Customer c WHERE c.login = :login"),
-    @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password"),
+    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
+    ,
+    @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id")
+    ,
+    @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")
+    ,
+    @NamedQuery(name = "Customer.findByFirstname", query = "SELECT c FROM Customer c WHERE c.firstname = :firstname")
+    ,
+    @NamedQuery(name = "Customer.findByLastname", query = "SELECT c FROM Customer c WHERE c.lastname = :lastname")
+    ,
+    @NamedQuery(name = "Customer.findByLogin", query = "SELECT c FROM Customer c WHERE c.login = :login")
+    ,
+    @NamedQuery(name = "Customer.findIdByLogin", query = "SELECT c.id FROM Customer c WHERE c.login = :login")
+    ,
+    @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password")
+    ,
     @NamedQuery(name = "Customer.findByType", query = "SELECT c FROM Customer c WHERE c.type = :type")})
 public class Customer extends AbstractEntity {
 
+    
     private String email;
 
     private String firstname;
 
     private String lastname;
-    @Column(nullable = false,unique = true) 
+    @Column(nullable = false, unique = true)
     private String login;
 
     private String password;
 
     private Integer type;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    private Set<Department> departmentSet;
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "customer_department",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "department_id")
+    )
+    private Set<Department> departments = new HashSet<>();
+
+    public void addDepartment(Department dep) {
+        departments.add(dep);
+        dep.getCustomers().add(this);
+    }
+    
+    public void removeDepartment(Department dep) {
+        departments.remove(dep);
+        dep.getCustomers().add(null);
+    }
 
     public Customer() {
     }
@@ -57,15 +86,21 @@ public class Customer extends AbstractEntity {
         this.lastname = lastname;
     }
 
-    
-    
-    public Customer( String firstname, String lastname, String email, String login, String password, Integer type) {
+    public Customer(String firstname, String lastname, String email, String login, String password, Integer type) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.login = login;
         this.password = password;
         this.type = type;
+    }
+
+    public Set<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(Set<Department> departments) {
+        this.departments = departments;
     }
 
     public String getEmail() {
@@ -116,13 +151,6 @@ public class Customer extends AbstractEntity {
         this.type = type;
     }
 
-    public Set<Department> getDepartmentSet() {
-        return departmentSet;
-    }
-
-    public void setDepartmentSet(Set<Department> departmentSet) {
-        this.departmentSet = departmentSet;
-    }
 
     @Override
     public int hashCode() {
@@ -133,7 +161,7 @@ public class Customer extends AbstractEntity {
         hash = 97 * hash + Objects.hashCode(this.login);
         hash = 97 * hash + Objects.hashCode(this.password);
         hash = 97 * hash + Objects.hashCode(this.type);
-        hash = 97 * hash + Objects.hashCode(this.departmentSet);
+        hash = 97 * hash + Objects.hashCode(this.departments);
         return hash;
     }
 
@@ -167,7 +195,7 @@ public class Customer extends AbstractEntity {
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        if (!Objects.equals(this.departmentSet, other.departmentSet)) {
+        if (!Objects.equals(this.departments, other.departments)) {
             return false;
         }
         return true;
@@ -175,7 +203,7 @@ public class Customer extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Customer{" + "email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", login=" + login + ", password=" + password + ", type=" + type + ", departmentSet=" + departmentSet + '}';
+        return "Customer{" + "email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", login=" + login + ", password=" + password + ", type=" + type + ", departments=" + departments + '}';
     }
 
 }
