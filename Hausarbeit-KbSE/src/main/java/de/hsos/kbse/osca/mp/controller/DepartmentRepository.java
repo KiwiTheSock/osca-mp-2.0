@@ -5,8 +5,6 @@
  */
 package de.hsos.kbse.osca.mp.controller;
 
-import de.hsos.kbse.osca.mp.abstracts.AbstractRepository;
-import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import java.util.List;

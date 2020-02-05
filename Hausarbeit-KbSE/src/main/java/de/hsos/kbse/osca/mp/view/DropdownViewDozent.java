@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.FacesComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -29,12 +28,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
-import jdk.nashorn.internal.objects.NativeArray;
 
 /**
  *
@@ -153,10 +149,11 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
         getExamMaxs().put("17:00", "17:00");
         getExamMaxs().put("18:00", "18:00");
 
-        for (Map.Entry<String, String> map : getTerms().entrySet()) {
+        getTerms().entrySet().forEach((map) -> {
             getConvertListTerms().add(map.getValue());
-        }
+        });
 
+        
         for (Map.Entry<String, String> map : getExamMins().entrySet()) {
             getConvertListExamMins().add(map.getValue());
         }
@@ -206,9 +203,6 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
         java.sql.Time myEndTime = end;
         LocalTime localStartTime = myStartTime.toLocalTime();
         LocalTime localEndTime = myEndTime.toLocalTime();
-
-        LocalTime setTimeStart;
-        LocalTime setTimeEnd;
         System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()\nGesamtzeit: " + tges + "\nSlotanzahl: " + slotges);
 
         List<Exam> exams = new ArrayList<>();
@@ -240,6 +234,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
         }
 
         exams.forEach((exam) -> {
+            //System.out.println("Exam: "+exam.toString());
             this.Exams.create(exam);
         });
 

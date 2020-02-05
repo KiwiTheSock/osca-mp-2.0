@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
+import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import de.hsos.kbse.osca.mp.service.AccessType;
 import java.util.Collection;
@@ -32,11 +33,9 @@ import javax.persistence.TypedQuery;
 @ApplicationScoped
 public class CustomerRepository extends AbstractFacade<Customer> {
 
-    
     @Inject
     private Jsonb jsonb;
-    
-    
+
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -55,6 +54,11 @@ public class CustomerRepository extends AbstractFacade<Customer> {
             super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "x", "x", 1));
             super.create(new Customer("Philipp", "Markmann", "pmarkman@hs-osnabrueck.de", "pmarkman", "asdf", 2));
             super.create(new Customer("Leander", "Nordmann", "nordmann@hs-osnabrueck.de", "lnordmann", "x", 2));
+            //this.getEntityManager().persist(new Department("OOAD", "SOSE2020"));
+            this.getEntityManager().persist(new Department("Algorithmen", "SOSE2020"));
+            this.getEntityManager().persist(new Department("SWE", "SOSE2020"));
+            this.getEntityManager().persist(new Department("Datenbanken", "SOSE2020"));
+            //this.getEntityManager().persist(new Exam());
             System.out.println("Database Initialize\n");
         } catch (Exception dinf) {
             throw new IllegalStateException("Something went wrong.");
@@ -117,6 +121,4 @@ public class CustomerRepository extends AbstractFacade<Customer> {
 //    public void setEm(EntityManager em) {
 //        this.em = em;
 //    }
-
-    
 }
