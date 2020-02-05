@@ -5,22 +5,23 @@
  */
 package de.hsos.kbse.osca.mp.view;
 
+import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
+import de.hsos.kbse.osca.mp.entity.Department;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
 /**
  *
  * @author wihowert
  */
+@Named
 @RequestScoped
-public class DropdownViewStudent implements Serializable {
+public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
 
     // Listen fuer angemeldete Module
     private Map<String, Map<String, String>> modulDay = new HashMap<>();
@@ -37,8 +38,11 @@ public class DropdownViewStudent implements Serializable {
     private String time;
 
     // Beispielhafte Initialisierung von Daten
-    @PostConstruct
-    public void init() {
+    public void init() { //@Observes @Initialized(RequestScoped.class) Object init
+        
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.init()");
+        
+        //fillDepartments();
         setModuls(new HashMap<>());
         setTimes(new HashMap<>());
         setStudents(new HashMap<>());
@@ -46,7 +50,7 @@ public class DropdownViewStudent implements Serializable {
         getStudents().put("Stud Test", "Stud Test");
         getStudents().put("Stud TestDos", "Stud TestDos");
         getStudents().put("Stud TestTres", "Stud TestTres");
-
+        
         getModuls().put("Mathe1", "Mathe 1");
         getModuls().put("KBSE", "KBSE");
         getModuls().put("OOAD", "OOAD");
@@ -72,7 +76,21 @@ public class DropdownViewStudent implements Serializable {
 
         getDayTime().put("15.10.2019", getTimes());
     }
-
+    
+    
+    /**
+     * 
+     *
+     * 
+     */
+    public void fillDepartments() {
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDepartments()");      
+        List<Department> tmp = this.Departments.getAll();
+        tmp.forEach((_item) -> {
+        getModuls().put(_item.getModulename(),_item.getSemester());
+        });
+    }
+    
     // Nachricht fuer Bestaetigung/Freigeben des Termins
     public void displayLog() {
         FacesMessage msg;

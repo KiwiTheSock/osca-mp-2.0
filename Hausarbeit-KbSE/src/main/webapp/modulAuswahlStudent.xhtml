@@ -15,6 +15,10 @@
 
     <h:body style="background-image: url('data/blurred.jpg'); background-repeat: no-repeat; background-size: cover">
 
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{dropdownViewStudent.fillDepartments}"/>
+        </f:metadata>
+        
         <!-- Logo der Hochschule -->
         <div style="text-align: center">
             <img height="30%" width="30%" src="data/Logo.png" alt="Hier sollte eigentlich ein Bild sein ..." onclick="location.href = 'load.xhtml'"></img>

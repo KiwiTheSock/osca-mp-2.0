@@ -48,7 +48,6 @@
             <artifactId>all-themes</artifactId>
             <version>1.0.10</version>
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>

@@ -6,6 +6,7 @@
 package de.hsos.kbse.osca.mp.entity;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -20,22 +21,38 @@ import javax.persistence.Table;
  * @author nordm
  */
 @Entity
-@Table(name = "DEPARTMENT")
+@Table(name = "department")
 @NamedQueries({
-    @NamedQuery(name = "Department.findAll", query = "SELECT d FROM Department d"),
-    @NamedQuery(name = "Department.findById", query = "SELECT d FROM Department d WHERE d.id = :id"),
-    @NamedQuery(name = "Department.findByModulename", query = "SELECT d FROM Department d WHERE d.modulename = :modulename"),
+    @NamedQuery(name = "Department.findAll", query = "SELECT d FROM Department d")
+    ,
+    @NamedQuery(name = "Department.findById", query = "SELECT d FROM Department d WHERE d.id = :id")
+    ,
+    @NamedQuery(name = "Department.findByModulename", query = "SELECT d FROM Department d WHERE d.modulename = :modulename")
+    ,
     @NamedQuery(name = "Department.findBySemester", query = "SELECT d FROM Department d WHERE d.semester = :semester")})
 public class Department extends AbstractEntity {
 
     private String modulename;
     private String semester;
 
-//    @OneToMany(cascade = {CascadeType.ALL})
-//    private Set<Customer> customerSet;
-    @OneToMany(cascade = {CascadeType.ALL})
-    private Set<Exam> examSet;
+    @OneToMany(
+            mappedBy = "department",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<Exam> exams = new HashSet<>();
 
+    public void addExam(Exam exam) {
+        exams.add(exam);
+        exam.setDepart(this);
+    }
+
+    public void removeComment(Exam exam) {
+        exams.remove(exam);
+        exam.setDepart(null);
+    }
+
+    //Constructor
     public Department() {
     }
 
@@ -44,6 +61,7 @@ public class Department extends AbstractEntity {
         this.semester = semester;
     }
 
+    //Getter/Setter
     public String getModulename() {
         return modulename;
     }
@@ -61,22 +79,24 @@ public class Department extends AbstractEntity {
     }
 
     public Set<Exam> getExamSet() {
-        return examSet;
+        return exams;
     }
 
     public void setExamSet(Set<Exam> examSet) {
-        this.examSet = examSet;
+        this.exams = examSet;
     }
 
+    //hashCode
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 19 * hash + Objects.hashCode(this.modulename);
         hash = 19 * hash + Objects.hashCode(this.semester);
-        hash = 19 * hash + Objects.hashCode(this.examSet);
+        hash = 19 * hash + Objects.hashCode(this.exams);
         return hash;
     }
 
+    //equals
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -95,14 +115,15 @@ public class Department extends AbstractEntity {
         if (!Objects.equals(this.semester, other.semester)) {
             return false;
         }
-        if (!Objects.equals(this.examSet, other.examSet)) {
+        if (!Objects.equals(this.exams, other.exams)) {
             return false;
         }
         return true;
     }
 
+    //toString
     @Override
     public String toString() {
-        return "Department{" + "modulename=" + modulename + ", semester=" + semester + ", examSet=" + examSet + '}';
+        return "Department{" + "modulename=" + modulename + ", semester=" + semester + ", examSet=" + exams + '}';
     }
 }
