@@ -45,7 +45,7 @@
                         <p:outputLabel for="moduls" value="Module: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                         <p:selectOneMenu id="moduls" value="#{dropdownViewStudent.modul}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
-                            <p:ajax update="moduls"/>
+                            <p:ajax listener="#{dropdownViewStudent.onDepartmentChange}" update="moduls"/>
                             <f:selectItem itemLabel="Modul auswaehlen" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{dropdownViewStudent.moduls}" />
                         </p:selectOneMenu>
@@ -55,7 +55,6 @@
                         <p:selectOneMenu id="day" value="#{dropdownViewStudent.day}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                             <f:selectItem itemLabel="Tag auswaehlen" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{dropdownViewStudent.days}" />
-                            <p:ajax listener="#{dropdownViewStuden.onDepartmentChange}" update="day"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel for="time" value="Zeit: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
@@ -71,7 +70,7 @@
                     </h:panelGrid>
 
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                        <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.fillDays}" 
+                        <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.displayExam}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px;"
                                          icon="pi pi-check-circle">
                         </p:commandButton>

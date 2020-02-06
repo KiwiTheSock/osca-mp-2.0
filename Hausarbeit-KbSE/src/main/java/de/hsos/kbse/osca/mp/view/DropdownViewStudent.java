@@ -12,11 +12,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 /**
@@ -42,41 +40,27 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     private String time;
 
     // Beispielhafte Initialisierung von Daten
-    @PostConstruct
     public void init() {
 
-        setModuls(new HashMap<>());
-        fillDepartments();
         //setModuls(new HashMap<>());
-        setTimes(new HashMap<>());
-        setStudents(new HashMap<>());
+        //fillDepartments();
+        //Get Modules
+        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.init()");
 
-        getStudents().put("Stud Test", "Stud Test");
-        getStudents().put("Stud TestDos", "Stud TestDos");
-        getStudents().put("Stud TestTres", "Stud TestTres");
+        moduls = new HashMap<String,String>();
+        moduls.put("KBSE", "KBSE");
+        moduls.put("OOAD", "OOAD");
 
-        /*        getModuls().put("Mathe1", "Mathe 1");
-        getModuls().put("KBSE", "KBSE");
-        getModuls().put("OOAD", "OOAD");*/
-        getTimes().put("13:00", "13:00");
-        getTimes().put("14:00", "14:00");
-        getTimes().put("15:00", "15:00");
-        //(K,V)
-        /*        getDays().put("15.10.2019", "15.10.2019");
-        getDays().put("16.10.2019", "16.10.2019");
-        getDays().put("17.10.2019", "17.10.2019");*/
-        //getModulDay().put("Mathe 1", getDays());
+        //Set days OOAD
+        Map<String, String> map = new HashMap<String,String>();
+        map.put("tag1", "tag1");
+        map.put("tag2", "tag2");
+        modulDay.put("OOAD", map);
 
-        /*        getDays().put("18.10.2019", "18.10.2019");
-        getDays().put("19.10.2019", "19.10.2019");
-        getDays().put("20.10.2019", "20.10.2019");
-        getModulDay().put("KBSE", getDays());*/
-
- /*        getDays().put("15.10.2019", "15.10.2019");
-        getDays().put("16.10.2019", "16.10.2019");
-        getDays().put("17.10.2019", "17.10.2019");
-        getModulDay().put("OOAD", getDays());*/
-        //getDayTime().put("15.10.2019", getTimes());
+        map = new HashMap<String,String>();
+        map.put("22.10.2019", "22.10.2019");
+        map.put("33.10.2019", "33.10.2019");
+        modulDay.put("KBSE", map);
     }
 
     public void fillDepartments() {
@@ -99,6 +83,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         System.out.println(modulDay.toString());*/
     }
 
+    
     public void fillDays() {
         System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDays()");
 
@@ -107,11 +92,16 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         setDays(new HashMap<>());
         List<Exam> tmp = this.Exams.getAllDaybyDepartment(Departments.getByModulname(getModul()).getId());
         tmp.forEach((_item) -> {
-            System.out.println(_item.toString());
+            //System.out.println(_item.toString());
             getDays().put(_item.getDatum().toString(), _item.getDatum().toString());
         });
-        System.out.println("GetDays:\n");
+        System.out.println("GetDays:"); // Funktioniert
         System.out.println(getDays().toString());
+
+        /*        System.out.println("\nGetTimes\n");
+        tmp.forEach((_item)->{
+        getTimes().put(_item.getBeginn().toString(),_item.getFinish().toString());
+        });*/
     }
 
     // Nachricht fuer Bestaetigung/Freigeben des Termins
@@ -130,9 +120,21 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
      * onDepartmentChange
      */
     public void onDepartmentChange() {
-        if (getModul() != null && !getModul().equals("")) {
-
+        if (modul != null && !modul.equals("")) {
+            days = modulDay.get(modul);
+        } else {
+            days = new HashMap<String,String>();
+            System.out.println("NÖÖ!");
         }
+    }
+    
+    public void displayExam() {
+        FacesMessage msg;
+        if(modul != null && day !=null) {
+            msg = new FacesMessage("Selected "+modul+" at "+day);
+        }else
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid", "modul is not selected!");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     /**

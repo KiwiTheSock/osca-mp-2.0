@@ -8,6 +8,7 @@ package de.hsos.kbse.osca.mp.boundary;
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpSession;
  * @author Philipp
  */
 @Named
-@RequestScoped
+@ApplicationScoped
 public class LoginQuery extends AbstractRepoAccesor implements Serializable {
 
     boolean loggedIn;
@@ -95,13 +96,17 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
     public String logout() {
         
         System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.logout()");
-
-        if (this.loggedIn == true) {
+        //System.out.println(SessionHandler.getLogins().toString());
+        System.out.println(SessionHandler.getLogins().containsKey(this.accountId));
+        
+        //Muss noch geändert werden, da kein User hinzugefügt wird
+        if (SessionHandler.getLogins().containsKey(this.accountId)) {
             System.out.println("Inside: logout()");
             this.loggedIn = true;
             this.accountId = this.cust.getId();
             return "login.xhtml?faces-redirect=true";
         }
+        
         
         return null;
     }

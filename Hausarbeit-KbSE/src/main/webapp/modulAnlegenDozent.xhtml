@@ -137,13 +137,11 @@
                                                      update="msgs popup">
                                     </p:commandButton>
 
-                                    <p:commandButton value="Logout" rendered="#{dropdownViewDozent.buttonCheck}" 
-                                                     action="#{dropdownViewDozent.displayLogNext()}"  
-                                                     style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 20px; color: red"
+                                    <p:commandButton style="font-family: Andale Mono, monospace; margin-top: 50px; font-size: 15px" 
+                                                     value="Logout"
                                                      icon="pi pi-sign-out"
-                                                     id="next">
-                                        <f:actionListener binding="#{dropdownViewDozent.redirect('load.xhtml')}"/>
-                                    </p:commandButton>
+                                                     action="#{loginQuery.logout()}"
+                                                     />
 
                                 </h:panelGrid>
 

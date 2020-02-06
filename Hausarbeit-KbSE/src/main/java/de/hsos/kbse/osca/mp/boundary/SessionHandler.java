@@ -17,6 +17,10 @@ public class SessionHandler {
 
     private static final Map<Long, HttpSession> logins = new HashMap<>();
 
+    public static Map<Long, HttpSession> getLogins() {
+        return logins;
+    }
+    
     public static void store(Long id, HttpSession session) {
         System.out.println("de.hsos.kbse.osca.mp.boundary.SessionHandler.store()\nID: " + id + " hinzugefügt!\n");
         logins.put(id, session);
