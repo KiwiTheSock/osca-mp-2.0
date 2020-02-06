@@ -10,6 +10,9 @@ import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import de.hsos.kbse.osca.mp.service.AccessType;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
@@ -49,6 +52,7 @@ public class CustomerRepository extends AbstractFacade<Customer> {
      */
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         try {
+            
             super.create(new Customer("Administrator", "Administrator", "admin@hs-osnabrueck.de", "admin", "admin", 0));
             //super.create(new Customer("Alias", "Dozent", "chef@hs-osnabrueck.de", "x", "x", 1));
             super.create(new Customer("Boss", "Dozent", "boss@hs-osnabrueck.de", "x", "x", 1));
@@ -58,7 +62,6 @@ public class CustomerRepository extends AbstractFacade<Customer> {
             this.getEntityManager().persist(new Department("Algorithmen", "SOSE2020"));
             this.getEntityManager().persist(new Department("SWE", "SOSE2020"));
             this.getEntityManager().persist(new Department("Datenbanken", "SOSE2020"));
-            //this.getEntityManager().persist(new Exam());
             System.out.println("Database Initialize\n");
         } catch (Exception dinf) {
             throw new IllegalStateException("Something went wrong.");

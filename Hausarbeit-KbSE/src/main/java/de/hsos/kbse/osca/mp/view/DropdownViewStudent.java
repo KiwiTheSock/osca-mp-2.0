@@ -8,6 +8,8 @@ package de.hsos.kbse.osca.mp.view;
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
+import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,7 +91,9 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         });
     }
 
+    @Logable(logLevel = LevelEnum.INFO)
     public void fillDays() {
+        System.out.println("GANZ GENAU");
         System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDays()");
 
         setDays(new HashMap<>());
@@ -101,15 +105,20 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         System.out.println("\nGetDays:\n"); // Funktioniert
         System.out.println(getDays().toString());
     }
+    
+    @Logable(logLevel = LevelEnum.INFO)
+    public void testMe(){
+        System.out.println("DAS WARN ERFOLG UND ICH BIN DAS MODUL: " + getModul());
+    }
 
     public void fillTime() throws ParseException {
         setTimes(new HashMap<>());
-        SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm");
         List<Exam> tmp = this.Exams.findByDay(formatter1.parse(this.getDay()));
-        
-        System.out.println("GetDay(): "+this.getDay());
-        System.out.println("formatter"+formatter1.parse(this.getDay()));
-        
+
+        System.out.println("GetDay(): " + this.getDay());
+        System.out.println("formatter" + formatter1.parse(this.getDay()));
+
         tmp.forEach((_item) -> {
             getTimes().put(_item.getBeginn().toString(), _item.getFinish().toString());
         });
@@ -132,10 +141,17 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     /**
      * onDepartmentChange
      */
+    @Logable(logLevel = LevelEnum.INFO)
     public void onDepartmentChange() {
-        if (getModul() != null && !getModul().equals("")) {
-
+        System.out.println("Alles klar, weiter gehts ...");
+        FacesMessage msg;
+        if (getModul() != null && getDay() != null && getTime() != null) {
+            msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr bestaetigt.");
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "entsprechende Parameter nicht ausgewaehlt ...");
         }
+
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     /**

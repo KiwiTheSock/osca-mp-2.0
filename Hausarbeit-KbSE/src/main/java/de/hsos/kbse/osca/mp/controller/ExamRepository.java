@@ -7,6 +7,10 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
@@ -28,14 +32,11 @@ public class ExamRepository extends AbstractFacade<Exam> {
         super(Exam.class);
     }
 
-    /*    public void createList(List<Exam> examList) {
-    
-    examList.forEach((Exam) -> {
-    super.create(Exam);
-    });
-    
-    System.out.println("Database Initialize\n");
-    }*/
+    public void init() throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+       // this.getEntityManager().persist(new Exam(formatter.parse("14:22"), 30, Time.valueOf("13:00"), Time.valueOf("13:30"), 1,));));
+    }
+
     public List<Exam> getAll() {
         System.out.print("SQL: getAll()");
         TypedQuery<Exam> query;
@@ -54,14 +55,14 @@ public class ExamRepository extends AbstractFacade<Exam> {
 
         return resultList;
     }
-    
+
     public List<Exam> findByDay(Date date) {
         System.err.println("SQL :"
                 + "gwt all z");
         TypedQuery<Exam> query;
-        query = this.em.createNamedQuery("Exam.findByDay",Exam.class);
+        query = this.em.createNamedQuery("Exam.findByDay", Exam.class);
         return query.getResultList();
-        
+
     }
 
     @Override
@@ -69,6 +70,4 @@ public class ExamRepository extends AbstractFacade<Exam> {
         return em;
     }
 
-
-    
 }

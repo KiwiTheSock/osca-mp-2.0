@@ -55,7 +55,7 @@
                         <p:selectOneMenu id="day" value="#{dropdownViewStudent.day}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
                             <f:selectItem itemLabel="Tag auswaehlen" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{dropdownViewStudent.days}" />
-                            <p:ajax listener="#{dropdownViewStuden.onDepartmentChange}" update="day"/>
+                            <p:ajax update="time"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel for="time" value="Zeit: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
@@ -71,9 +71,11 @@
                     </h:panelGrid>
 
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                        <p:commandButton value="Bestaetigen" update="msgs" action="#{dropdownViewStudent.fillDays}" 
+                        <p:commandButton value="Bestaetigen" update="msgs day time moduls" action="#{dropdownViewStudent.testMe()}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px;"
                                          icon="pi pi-check-circle">
+                            <f:actionListener binding="#{dropdownViewStudent.fillDays()}"/>
+                            <p:ajax update="msgs day time moduls"/>
                         </p:commandButton>
                         <p:commandButton value="Termin freigeben" update="msgs" action="#{dropdownViewStudent.displayLog}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px; color: red"

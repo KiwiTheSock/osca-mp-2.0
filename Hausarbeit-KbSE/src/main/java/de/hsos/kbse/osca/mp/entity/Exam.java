@@ -87,6 +87,15 @@ public class Exam extends AbstractEntity {
         this.spaceforstudents = spaceforstudents;
     }
 
+    public Exam(Date datum, Integer duration, Time beginn, Time finish, Integer spaceforstudents, Department department) {
+        this.datum = datum;
+        this.duration = duration;
+        this.beginn = beginn;
+        this.finish = finish;
+        this.spaceforstudents = spaceforstudents;
+        this.department = department;
+    }
+    
     public Time getBeginn() {
         return beginn;
     }
