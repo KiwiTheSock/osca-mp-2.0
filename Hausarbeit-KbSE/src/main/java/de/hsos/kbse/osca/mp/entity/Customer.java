@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -46,9 +47,7 @@ import javax.persistence.Table;
 public class Customer extends AbstractEntity {
 
     private String email;
-
     private String firstname;
-
     private String lastname;
     @Column(nullable = false, unique = true)
     private String login;
@@ -88,12 +87,12 @@ public class Customer extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "exam_id")
     )
     private Set<Exam> exams = new HashSet<>();
-    
+
     public void addExam(Exam ex) {
         exams.add(ex);
         ex.getCustomers().add(this);
     }
-    
+
     public void removeExam(Exam ex) {
         exams.remove(ex);
         ex.getCustomers().add(null);

@@ -34,7 +34,7 @@ public class ExamRepository extends AbstractFacade<Exam> {
 
     public void init() throws ParseException {
         DateFormat formatter = new SimpleDateFormat("HH:mm");
-       // this.getEntityManager().persist(new Exam(formatter.parse("14:22"), 30, Time.valueOf("13:00"), Time.valueOf("13:30"), 1,));));
+        // this.getEntityManager().persist(new Exam(formatter.parse("14:22"), 30, Time.valueOf("13:00"), Time.valueOf("13:30"), 1,));));
     }
 
     public List<Exam> getAll() {
@@ -56,12 +56,19 @@ public class ExamRepository extends AbstractFacade<Exam> {
         return resultList;
     }
 
-    public List<Exam> findByDay(Date date) {
-        System.err.println("SQL :"
-                + "gwt all z");
+    public List<Exam> findByDay(String date) throws ParseException {
+        System.out.println("SQL :"
+                + date);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//give format in which you are receiving the `String date_updated`
+        Date searchdate = sdf.parse(date);
+        //Ausgabe
+        System.out.println("Bin: " + searchdate.getClass());
+        System.out.println(searchdate.toString());
+
         TypedQuery<Exam> query;
         query = this.em.createNamedQuery("Exam.findByDay", Exam.class);
-        return query.getResultList();
+        return query.setParameter("datum", searchdate).getResultList();
 
     }
 

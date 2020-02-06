@@ -16,6 +16,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -32,7 +34,7 @@ import javax.persistence.Table;
     ,
     @NamedQuery(name = "Department.findBySemester", query = "SELECT d FROM Department d WHERE d.semester = :semester")})
 public class Department extends AbstractEntity {
-
+    
     private String modulename;
     private String semester;
 

@@ -11,8 +11,10 @@ import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.Logable;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,41 +47,10 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     private String time;
 
     // Beispielhafte Initialisierung von Daten
-    @PostConstruct
     public void init() {
 
         setModuls(new HashMap<>());
         fillDepartments();
-        //setModuls(new HashMap<>());
-        setTimes(new HashMap<>());
-        setStudents(new HashMap<>());
-
-        getStudents().put("Stud Test", "Stud Test");
-        getStudents().put("Stud TestDos", "Stud TestDos");
-        getStudents().put("Stud TestTres", "Stud TestTres");
-
-        /*        getModuls().put("Mathe1", "Mathe 1");
-        getModuls().put("KBSE", "KBSE");
-        getModuls().put("OOAD", "OOAD");*/
-        getTimes().put("13:00", "13:00");
-        getTimes().put("14:00", "14:00");
-        getTimes().put("15:00", "15:00");
-        //(K,V)
-        /*        getDays().put("15.10.2019", "15.10.2019");
-        getDays().put("16.10.2019", "16.10.2019");
-        getDays().put("17.10.2019", "17.10.2019");*/
-        //getModulDay().put("Mathe 1", getDays());
-
-        /*        getDays().put("18.10.2019", "18.10.2019");
-        getDays().put("19.10.2019", "19.10.2019");
-        getDays().put("20.10.2019", "20.10.2019");
-        getModulDay().put("KBSE", getDays());*/
-
- /*        getDays().put("15.10.2019", "15.10.2019");
-        getDays().put("16.10.2019", "16.10.2019");
-        getDays().put("17.10.2019", "17.10.2019");
-        getModulDay().put("OOAD", getDays());*/
-        //getDayTime().put("15.10.2019", getTimes());
     }
 
     public void fillDepartments() {
@@ -96,34 +67,36 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         System.out.println("GANZ GENAU");
         System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDays()");
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         setDays(new HashMap<>());
         List<Exam> tmp = this.Exams.getAllDaybyDepartment(Departments.getByModulname(getModul()).getId());
         tmp.forEach((_item) -> {
             //System.out.println(_item.toString());
-            getDays().put(_item.getDatum().toString(), _item.getDatum().toString());
+            getDays().put(dateFormat.format(_item.getDatum()), dateFormat.format(_item.getDatum()));
         });
-        System.out.println("\nGetDays:\n"); // Funktioniert
+        System.out.println("GetDays:"); // Funktioniert
         System.out.println(getDays().toString());
     }
-    
+
     @Logable(logLevel = LevelEnum.INFO)
-    public void testMe(){
+    public void testMe() {
         System.out.println("DAS WARN ERFOLG UND ICH BIN DAS MODUL: " + getModul());
     }
 
-    public void fillTime() throws ParseException {
+    @Logable(logLevel = LevelEnum.INFO)
+    public void fillTimes() throws ParseException {
         setTimes(new HashMap<>());
-        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm");
-        List<Exam> tmp = this.Exams.findByDay(formatter1.parse(this.getDay()));
+        List<Exam> tmp = this.Exams.findByDay(this.day);
 
+        //Ausgabe
+        System.out.println(tmp.toString());
         System.out.println("GetDay(): " + this.getDay());
-        System.out.println("formatter" + formatter1.parse(this.getDay()));
 
         tmp.forEach((_item) -> {
             getTimes().put(_item.getBeginn().toString(), _item.getFinish().toString());
         });
-        System.out.println("\nGetTimes\n");
-        System.out.println(getTimes().toString() + "\n");
+        
+        System.out.println(getTimes().toString());
     }
 
     /**
