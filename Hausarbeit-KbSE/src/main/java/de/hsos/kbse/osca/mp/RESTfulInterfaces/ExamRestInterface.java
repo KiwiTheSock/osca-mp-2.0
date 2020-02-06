@@ -31,7 +31,7 @@
 //    @POST
 ////    @Path("admin")
 //    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    public Response createDepartment(
+//    public Response createExam(
 //            @QueryParam("modulname") String modulname,
 //            @QueryParam("semester") String semester);
 //
@@ -44,7 +44,7 @@
 //    @PUT
 //    @Path("update/{modulname}")
 //    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    public Response updateDepartment(
+//    public Response updateExam(
 //            @PathParam("modulname") String modulname,
 //            @QueryParam("semester") String semester );
 //
@@ -56,7 +56,7 @@
 //    @DELETE
 //    @Path("{modulname}")
 //    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    public Response deleteDepartment(
+//    public Response deleteExam(
 //            @PathParam("modulname") String modulname);
 //
 //    /**
@@ -64,9 +64,10 @@
 //     * @param modulname
 //     * @return
 //     */
-//    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    
 //    @GET
 //    @Path("find/{modulname}")
-//    public Response findDepartment(@PathParam("modulname") String modulname);
+//    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    public Response findExam(@PathParam("modulname") String modulname);
 //    
 //}

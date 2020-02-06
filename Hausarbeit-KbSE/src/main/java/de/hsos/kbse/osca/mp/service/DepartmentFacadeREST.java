@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
  */
 @RequestScoped
 @Path("de.hsos.kbse.osca.mp.entity.department")
-public class DepartmentFacadeREST implements DepartmentRestInterface{
+public class DepartmentFacadeREST implements DepartmentRestInterface {
 
     @Inject
     private DepartmentRepository repo;
@@ -147,8 +147,14 @@ public class DepartmentFacadeREST implements DepartmentRestInterface{
 
     @Override
     public Response findDepartment(String modulname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+        try {
+            Department cus = this.repo.getByModulname(modulname);
+            this.repo.remove(cus);
+            return Response
+                    .accepted(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
 }

@@ -24,18 +24,12 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "EXAM")
 @NamedQueries({
-    @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e")
-    ,
-    @NamedQuery(name = "Exam.findById", query = "SELECT e FROM Exam e WHERE e.id = :id")
-    ,
-    @NamedQuery(name = "Exam.findByDay", query = "SELECT e FROM Exam e WHERE e.datum = :datum")
-    ,
-    @NamedQuery(name = "Exam.findByDuration", query = "SELECT e FROM Exam e WHERE e.duration = :duration")
-    ,
-    @NamedQuery(name = "Exam.findByFinish", query = "SELECT e FROM Exam e WHERE e.finish = :finish")
-    ,
-    @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents")
-    ,
+    @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e"),
+    @NamedQuery(name = "Exam.findById", query = "SELECT e FROM Exam e WHERE e.id = :id"),
+    @NamedQuery(name = "Exam.findByDay", query = "SELECT e FROM Exam e WHERE e.datum = :datum"),
+    @NamedQuery(name = "Exam.findByDuration", query = "SELECT e FROM Exam e WHERE e.duration = :duration"),
+    @NamedQuery(name = "Exam.findByFinish", query = "SELECT e FROM Exam e WHERE e.finish = :finish"),
+    @NamedQuery(name = "Exam.findBySpaceforstudents", query = "SELECT e FROM Exam e WHERE e.spaceforstudents = :spaceforstudents"),
     @NamedQuery(name = "Exam.findByStart", query = "SELECT e FROM Exam e WHERE e.beginn = :beginn")})
 public class Exam extends AbstractEntity {
 
@@ -49,9 +43,9 @@ public class Exam extends AbstractEntity {
     private Time finish;
 
     private Integer spaceforstudents;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private Department department; 
+    private Department department;
 
     public Department getDepart() {
         return department;
@@ -60,10 +54,20 @@ public class Exam extends AbstractEntity {
     public void setDepart(Department depart) {
         this.department = depart;
     }
-    
+
     public Exam() {
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    
+    
     public Exam(Date datum, Integer duration, Time beginn, Time finish, Integer spaceforstudents) {
         this.datum = datum;
         this.duration = duration;
@@ -71,6 +75,17 @@ public class Exam extends AbstractEntity {
         this.finish = finish;
         this.spaceforstudents = spaceforstudents;
     }
+
+    public Exam(Date datum, Integer duration, Time beginn, Time finish, Integer spaceforstudents, Department department) {
+        this.datum = datum;
+        this.duration = duration;
+        this.beginn = beginn;
+        this.finish = finish;
+        this.spaceforstudents = spaceforstudents;
+        this.department = department;
+    }
+    
+    
 
     public Time getBeginn() {
         return beginn;

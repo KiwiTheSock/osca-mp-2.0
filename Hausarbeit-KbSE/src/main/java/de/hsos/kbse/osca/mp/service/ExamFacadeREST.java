@@ -5,6 +5,8 @@
  */
 package de.hsos.kbse.osca.mp.service;
 
+import de.hsos.kbse.osca.mp.controller.DepartmentRepository;
+import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
 import java.sql.Time;
 import java.text.ParseException;
@@ -14,6 +16,7 @@ import java.util.*;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -36,56 +39,67 @@ import javax.ws.rs.core.Response;
 @Path("de.hsos.kbse.osca.mp.entity.exam")
 public class ExamFacadeREST extends AbstractFacade<Exam> {
 
+    @Inject
+    DepartmentRepository deprepo;
+
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
     public ExamFacadeREST() {
         super(Exam.class);
     }
-    /*
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response createExam(
-    @QueryParam("tag") String tag,
-    @QueryParam("start") String start,
-    @QueryParam("finish") String finish,
-    @QueryParam("duration") Integer duration,
-    @QueryParam("spaceforstudents") Integer spaceforstudents
-    ) throws ParseException {
-    
-    //        GregorianCalendar calender3 = new GregorianCalendar(Locale.GERMANY);
-    //        calender3.set(2015, 03, 12, 16, 00);
-    //        Date finish1 = calender3.getTime();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    Date date = simpleDateFormat.parse(tag);
-    
-    LocalTime st = LocalTime.parse(start);
-    Time time1 = Time.valueOf(st);
-    
-    LocalTime end = LocalTime.parse(finish);
-    Time time2 = Time.valueOf(end);
-    
-    Exam exam = new Exam(date, duration, time1, time2, spaceforstudents);
-    super.create(exam);
-    //        try {
-    //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
-    //        } catch (Exception e) {
-    return Response.status(200)
-    .entity("newEntity : " + exam.getDatum() + " with " + exam.getDuration()
-    + " and " + exam.getBeginn() + " and " + exam.getFinish()).build();
-    //        }
-    
-    }*/
 
     @POST
-    @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Exam entity) {
-        super.create(entity);
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response createExam(
+            @QueryParam("tag") String tag,
+            @QueryParam("start") String start,
+            @QueryParam("finish") String finish,
+            @QueryParam("duration") Integer duration,
+            @QueryParam("space") Integer space,
+            @QueryParam("depid") Long depid
+    ) throws ParseException {
+
+        //        GregorianCalendar calender3 = new GregorianCalendar(Locale.GERMANY);
+        //        calender3.set(2015, 03, 12, 16, 00);
+        //        Date finish1 = calender3.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = simpleDateFormat.parse(tag);
+
+        LocalTime st = LocalTime.parse(start);
+        Time time1 = Time.valueOf(st);
+
+        LocalTime end = LocalTime.parse(finish);
+        Time time2 = Time.valueOf(end);
+    Department dep = this.em.find(Department.class, depid);
+
+        List<Exam> exams = new ArrayList<>();
+
+        Exam exam = new Exam(date, duration, time1, time2, space);
+        Department department = this.deprepo.find(depid);
+
+        department.addExam(exam);
+
+        super.create(exam);
+        //        try {
+        //            return (Response.ok(exam, MediaType.APPLICATION_JSON)).build();
+        //        } catch (Exception e) {
+        return Response.status(200)
+                .entity("newEntity : " + exam.getDatum() + " with " + exam.getDuration()
+                        + " and space:::" + exam.getSpaceforstudents() + " and " + exam.getFinish()).build();
+        //        }
+
     }
+
+//    @POST
+//    @Override
+//        @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    public void create(Exam entity) {
+//        super.create(entity);
+//    }
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public void edit(@PathParam("id") Long id, Exam entity) {
         super.edit(entity);
     }
@@ -98,21 +112,21 @@ public class ExamFacadeREST extends AbstractFacade<Exam> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Exam find(@PathParam("id") Long id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Exam> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Exam> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

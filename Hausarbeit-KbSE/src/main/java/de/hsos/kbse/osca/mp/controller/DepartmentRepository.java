@@ -50,8 +50,8 @@ public class DepartmentRepository extends AbstractFacade<Department> {
             throw e;
         }
     }
-
     public List<Department> getAll() {
+
         System.out.print("SQL: getAll()");
         TypedQuery<Department> query;
         query = this.em.createNamedQuery("Department.findAll", Department.class);
