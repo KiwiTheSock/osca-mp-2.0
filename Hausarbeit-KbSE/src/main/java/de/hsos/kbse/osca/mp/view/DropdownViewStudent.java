@@ -126,13 +126,17 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         System.out.println(getTimes().toString() + "\n");
     }
 
-    // Nachricht fuer Bestaetigung/Freigeben des Termins
-    public void displayLog() {
+    /**
+     * onDepartmentErase
+     */
+    @Logable(logLevel = LevelEnum.INFO)
+    public void onDepartmentErase() {
+        System.out.println("Alles klar, weiter gehts ...");
         FacesMessage msg;
-        if (getModul() != null) {
-            msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr bestaetigt.");
+        if (getModul() != null && getDay() != null && getTime() != null) {
+            msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr freigegeben.");
         } else {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Parameter nicht ausgewaehlt.");
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "entsprechende Parameter nicht ausgewaehlt ...");
         }
 
         FacesContext.getCurrentInstance().addMessage(null, msg);

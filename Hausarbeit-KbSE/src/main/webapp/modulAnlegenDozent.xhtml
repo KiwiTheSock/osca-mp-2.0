@@ -161,7 +161,7 @@
                         <p:outputLabel id="setStudents" value="Studenten/innen einer Pruefung zuweisen" style="font-family: Andale Mono, monospace;"/>
 
                         <!-- Grid fuer das Hinzufuegen eine Studenten-->
-                        <h:panelGrid columns="2" style="margin-top:50px" cellpadding="5">
+                        <h:panelGrid columns="3" style="margin-top:50px" cellpadding="5">
 
                             <p:outputLabel for="students" value="Studenten/innen: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
@@ -171,6 +171,13 @@
                                 <f:selectItems value="#{dropdownViewStudent.students}" />
                             </p:selectOneMenu>
 
+                            <p:commandButton value="Student setzen" update="msgs day time moduls" action="#{dropdownViewStudent.fillTime()}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 15px;"
+                                             icon="pi pi-check-circle">
+                                <f:actionListener binding="#{dropdownViewStudent.fillDays()}"/>
+                                <p:ajax update="msgs day time moduls"/>
+                            </p:commandButton>
+
                             <p:outputLabel for="moduls" value="Module: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                             <p:selectOneMenu id="moduls" value="#{dropdownViewStudent.modul}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
@@ -179,6 +186,13 @@
                                 <f:selectItems value="#{dropdownViewStudent.moduls}" />
                             </p:selectOneMenu>
 
+                            <p:commandButton value="Modul setzen" update="msgs day time moduls" action="#{dropdownViewStudent.fillTime()}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 15px;"
+                                             icon="pi pi-check-circle">
+                                <f:actionListener binding="#{dropdownViewStudent.fillDays()}"/>
+                                <p:ajax update="msgs day time moduls"/>
+                            </p:commandButton>
+
                             <p:outputLabel for="day" value="Tag: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                             <p:selectOneMenu id="day" value="#{dropdownViewStudent.day}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
@@ -186,6 +200,13 @@
                                 <f:selectItems value="#{dropdownViewStudent.days}" />
                                 <p:ajax update="day"/>
                             </p:selectOneMenu>
+
+                            <p:commandButton value="Tag setzen" update="msgs day time moduls" action="#{dropdownViewStudent.fillTime()}" 
+                                             style="font-family: Andale Mono, monospace; font-size: 15px;"
+                                             icon="pi pi-check-circle">
+                                <f:actionListener binding="#{dropdownViewStudent.fillDays()}"/>
+                                <p:ajax update="msgs day time moduls"/>
+                            </p:commandButton>
 
                             <p:outputLabel for="time" value="Zeit: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
@@ -196,8 +217,13 @@
                             </p:selectOneMenu>
 
                         </h:panelGrid>
+
+                        <!-- Trennungslinie -->
+                        <p:separator style="margin-top: 30px; border-color: #BCCBD0"/>
+                        <p:spacer style="margin-top: 20px"/>
+
                         <!-- Bestaetigen und ausloggen-->
-                        <h:panelGrid columns="1" style="margin-top:50px" cellpadding="5">
+                        <h:panelGrid columns="1" style="margin-top:20px" cellpadding="5">
                             <p:commandButton value="Bestaetigen" update="msgs2" action="#{dropdownViewStudent.displayLog}" 
                                              style="font-family: Andale Mono, monospace; font-size: 15px; margin-top: 30px"
                                              icon="pi pi-save">
