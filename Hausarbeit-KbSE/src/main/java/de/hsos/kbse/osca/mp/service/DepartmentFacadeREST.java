@@ -14,11 +14,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -44,15 +42,95 @@ public class DepartmentFacadeREST implements DepartmentRestInterface {
 //        super(Department.class);
     }
 
-//    @POST
 //    @Override
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void create(Department entity) {
-//        this.repo.create(entity);
-//    }
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    @Override
+    public Response createDepartment(String modulname, String semester) {
+        Department dep = new Department(modulname, semester);
+        try {
+            this.repo.create(dep);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateDepartment(String modulname, String newModulname, String semester) {
+        try {
+            Department dep = this.repo.getByModulname(modulname);
+            dep.setSemester(semester);
+            dep.setModulename(newModulname);
+            this.repo.edit(dep);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateDepartmentModulname(String modulname, String newModulname) {
+        try {
+            Department dep = this.repo.getByModulname(modulname);
+            dep.setModulename(newModulname);
+            this.repo.edit(dep);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateDepartmentSemester(String modulname, String semester) {
+        try {
+            Department dep = this.repo.getByModulname(modulname);
+            dep.setSemester(semester);
+            this.repo.edit(dep);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response findDepartment(String modulname) {
+        try {
+            Department dep = this.repo.getByModulname(modulname);
+            this.repo.remove(dep);
+            return Response
+                    .status(Response.Status.GONE)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response deleteDepartment(String modulname) {
+        try {
+            Department dep = this.repo.getByModulname(modulname);
+            this.repo.remove(dep);
+            return Response
+                    .status(Response.Status.GONE)
+                    .entity(this.repo.getJsonb().toJson(dep)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
     @PUT
     @Path("{id}")
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Long id, Department entity) {
         this.repo.edit(entity);
 
@@ -66,21 +144,17 @@ public class DepartmentFacadeREST implements DepartmentRestInterface {
 
     @GET
     @Path("{id}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Department find(@PathParam("id") Long id) {
         return this.repo.find(id);
     }
 
     @GET
-//    @Override
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Department> findAll() {
         return this.repo.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Department> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return this.repo.findRange(new int[]{from, to});
     }
@@ -90,71 +164,6 @@ public class DepartmentFacadeREST implements DepartmentRestInterface {
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(this.repo.count());
-    }
-
-//    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-
-    @Override
-    public Response createDepartment(String modulname, String semester) {
-        Department dep = new Department(modulname, semester);
-        try {
-            this.repo.create(dep);
-            return Response.ok(this.repo.getJsonb().toJson(dep)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
-
-    @Override
-    public Response updateDepartmentModulname(String modulname, String newModulname) {
-        try {
-            Department dep = this.repo.getByModulname(modulname);
-            System.out.println("asdlkfjasldfkj  " + dep.toString());
-            dep.setModulename(newModulname);
-            this.repo.edit(dep);
-            return Response.ok(this.repo.getJsonb().toJson(dep)).build();
-        } catch (NoResultException e) {
-            throw e;
-        }
-    }
-
-    @Override
-    public Response updateDepartmentSemester(String modulname, String semester) {
-        try {
-            Department dep = this.repo.getByModulname(modulname);
-            dep.setSemester(semester);
-            this.repo.edit(dep);
-            return Response.ok(this.repo.getJsonb().toJson(dep)).build();
-        } catch (NoResultException e) {
-            throw e;
-        }
-    }
-
-    @Override
-    public Response deleteDepartment(String modulname) {
-        try {
-            Department cus = this.repo.getByModulname(modulname);
-            this.repo.remove(cus);
-            return Response
-                    .accepted(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
-
-    @Override
-    public Response findDepartment(String modulname) {
-        try {
-            Department cus = this.repo.getByModulname(modulname);
-            this.repo.remove(cus);
-            return Response
-                    .accepted(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
     }
 
 }

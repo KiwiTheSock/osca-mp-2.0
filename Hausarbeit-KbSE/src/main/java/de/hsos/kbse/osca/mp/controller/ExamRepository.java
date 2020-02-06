@@ -9,6 +9,9 @@ import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -17,8 +20,12 @@ import javax.persistence.TypedQuery;
  *
  * @author Philipp
  */
+@Named
 @RequestScoped
 public class ExamRepository extends AbstractFacade<Exam> {
+
+    @Inject
+    private Jsonb jsonb;
 
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -59,6 +66,22 @@ public class ExamRepository extends AbstractFacade<Exam> {
         return em;
     }
 
+    public Jsonb getJsonb() {
+        return jsonb;
+    }
 
+    public void setJsonb(Jsonb jsonb) {
+        this.jsonb = jsonb;
+    }
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
     
+    
+
 }

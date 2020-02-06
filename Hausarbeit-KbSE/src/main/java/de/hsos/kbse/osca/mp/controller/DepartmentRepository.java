@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -41,31 +40,23 @@ public class DepartmentRepository extends AbstractFacade<Department> {
     }
 
     public Department getByModulname(String modulename) {
-        try {
-            System.out.print("SQL: get " + modulename);
-            TypedQuery<Department> query;
-            query = this.getEntityManager().createNamedQuery("Department.findByModulename", Department.class);
-            return query.setParameter("modulename", modulename).getSingleResult();
-        } catch (NoResultException e) {
-            throw e;
-        }
+        TypedQuery<Department> query;
+        query = this.getEntityManager().createNamedQuery("Department.findByModulename", Department.class);
+        return query.setParameter("modulename", modulename).getSingleResult();
     }
-    public List<Department> getAll() {
 
-        System.out.print("SQL: getAll()");
+    public List<Department> getAll() {
         TypedQuery<Department> query;
         query = this.em.createNamedQuery("Department.findAll", Department.class);
         return query.getResultList();
     }
-    
-   public List<Department> getAllfromUserId() {
-       return null;
-   }
+
+
     public void setJsonb(Jsonb jsonb) {
         this.jsonb = jsonb;
     }
-    
-        public Jsonb getJsonb() {
+
+    public Jsonb getJsonb() {
         return jsonb;
     }
 }

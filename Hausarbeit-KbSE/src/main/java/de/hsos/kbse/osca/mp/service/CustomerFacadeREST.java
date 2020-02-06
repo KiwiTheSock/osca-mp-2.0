@@ -59,7 +59,7 @@ public class CustomerFacadeREST implements CustomerRestInterface {
             return Response
                     .status(Response.Status.FOUND)
                     .entity(this.repo.getJsonb().toJson(all)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
     }
@@ -78,7 +78,7 @@ public class CustomerFacadeREST implements CustomerRestInterface {
             return Response
                     .status(Response.Status.FOUND)
                     .entity(this.repo.getJsonb().toJson(all)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
     }
@@ -97,7 +97,7 @@ public class CustomerFacadeREST implements CustomerRestInterface {
             return Response
                     .status(Response.Status.FOUND)
                     .entity(this.repo.getJsonb().toJson(all)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
             return Response.status(Response.Status.CONFLICT).build();
         }
     }
@@ -113,13 +113,14 @@ public class CustomerFacadeREST implements CustomerRestInterface {
      */
     @Override
     public Response createStudent(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
         try {
-//            super.create(cus);
+            Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.STUDENT.getLevelCode());
             this.repo.create(cus);
-            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
         }
     }
 
@@ -134,13 +135,14 @@ public class CustomerFacadeREST implements CustomerRestInterface {
      */
     @Override
     public Response createDozent(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
         try {
-//            super.create(cus);
+            Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.DOZENT.getLevelCode());
             this.repo.create(cus);
-            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
         }
     }
 
@@ -155,29 +157,140 @@ public class CustomerFacadeREST implements CustomerRestInterface {
      */
     @Override
     public Response createAdmin(String firstname, String lastname, String email, String login, String password) {
-        Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
         try {
-//            super.create(cus);
+            Customer cus = new Customer(firstname, lastname, email, login, password, AccessType.ADMINISTRATOR.getLevelCode());
             this.repo.create(cus);
-            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NullPointerException | NotFoundException | IllegalArgumentException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomer(String login, String newLogin, String firstname, String lastname, String email, String password) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setFirstname(firstname);
+            cus.setEmail(email);
+            cus.setLastname(lastname);
+            cus.setPassword(password);
+            cus.setLogin(newLogin);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomerLogin(String login, String newLogin) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setLogin(newLogin);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomerFirstname(String login, String firstname) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setFirstname(firstname);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomerLastname(String login, String lastname) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setLastname(lastname);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomerEmail(String login, String email) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setEmail(email);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response updateCustomerPassword(String login, String password) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            cus.setPassword(password);
+            this.repo.edit(cus);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response findCustomerByLogin(String login) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            return Response
+                    .status(Response.Status.FOUND)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+    }
+
+    @Override
+    public Response deleteCustomer(String login) {
+        try {
+            Customer cus = this.repo.getByLogin(login);
+            this.repo.remove(cus);
+            return Response
+                    .status(Response.Status.GONE)
+                    .entity(this.repo.getJsonb().toJson(cus)).build();
+        } catch (NullPointerException | NotFoundException | IllegalArgumentException | NoResultException ex) {
+            return Response.status(Response.Status.CONFLICT).build();
         }
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Long id, Customer entity
-    ) {
-//        super.edit(entity);
+    public void edit(@PathParam("id") Long id, Customer entity) {
         this.repo.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Long id
-    ) {
+    public void remove(@PathParam("id") Long id) {
         this.repo.remove(this.repo.find(id));
     }
 
@@ -212,48 +325,7 @@ public class CustomerFacadeREST implements CustomerRestInterface {
         return String.valueOf(this.repo.count());
     }
 
-//    @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
-    @Override
-    public Response updateCustomer(String login, String newLogin, String firstname, String lastname, String email, String password) {
-        try {
-            Customer cus = this.repo.getByLogin(login);
-            cus.setFirstname(firstname);
-            cus.setEmail(email);
-            cus.setLastname(lastname);
-            cus.setPassword(password);
-            cus.setLogin(newLogin);
-            this.repo.edit(cus);
-            return Response.ok(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NoResultException e) {
-            throw e;
-        }
-    }
-
-    @Override
-    public Response findCustomerByLogin(String login) {
-        try {
-            Customer cus = this.repo.getByLogin(login);
-            return Response
-                    .ok(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
-
-    @Override
-    public Response deleteCustomer(String login) {
-        try {
-            Customer cus = this.repo.getByLogin(login);
-            this.repo.remove(cus);
-            return Response
-                    .accepted(this.repo.getJsonb().toJson(cus)).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
-
 }

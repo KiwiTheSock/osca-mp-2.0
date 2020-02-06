@@ -39,6 +39,21 @@ public interface DepartmentRestInterface {
      *
      * @param modulname
      * @param newModulname
+     * @param semester
+     * @return
+     */
+    @PUT
+    @Path("update/{modulname}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateDepartment(
+            @PathParam("modulname") String modulname,
+            @QueryParam("newModulname") String newModulname,
+            @QueryParam("semester") String semester);
+
+    /**
+     *
+     * @param modulname
+     * @param newModulname
      * @return
      */
     @PUT
@@ -77,8 +92,8 @@ public interface DepartmentRestInterface {
      * @param modulname
      * @return
      */
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @GET
     @Path("find/{modulname}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response findDepartment(@PathParam("modulname") String modulname);
 }
