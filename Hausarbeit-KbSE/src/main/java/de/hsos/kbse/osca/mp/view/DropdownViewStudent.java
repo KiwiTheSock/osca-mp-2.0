@@ -9,14 +9,15 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 /**
@@ -24,7 +25,7 @@ import javax.inject.Named;
  * @author wihowert
  */
 @Named
-@RequestScoped
+@SessionScoped
 public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
 
     // Listen fuer angemeldete Module
@@ -86,24 +87,11 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         tmp.forEach((_item) -> {
             getModuls().put(_item.getModulename(), _item.getModulename());
         });
-
-        //Zu dem jeweiligen Modul mussen nun die Zeiten hinzugefügt werden
-        /*        Map<String, String> map = new HashMap<>();
-        List<Exam> extmp = this.Exams.getAllDaybyDepartment(Departments.getByModulname(getModul()).getId());
-        extmp.forEach((_item) -> {
-        System.out.println(_item.toString());
-        map.put(_item.getDatum().toString(), _item.getDatum().toString());
-        modulDay.put(_item.toString(), map);
-        });
-        
-        System.out.println(modulDay.toString());*/
     }
 
     public void fillDays() {
         System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDays()");
 
-        //Departments.getByModulname(getModul()).getId());  GEHT!
-        //List<Exam> tmp = this.Exams.getAllDaybyDepartment(.getId())
         setDays(new HashMap<>());
         List<Exam> tmp = this.Exams.getAllDaybyDepartment(Departments.getByModulname(getModul()).getId());
         tmp.forEach((_item) -> {
@@ -112,12 +100,21 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         });
         System.out.println("\nGetDays:\n"); // Funktioniert
         System.out.println(getDays().toString());
+    }
+
+    public void fillTime() throws ParseException {
+        setTimes(new HashMap<>());
+        SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy");
+        List<Exam> tmp = this.Exams.findByDay(formatter1.parse(this.getDay()));
         
-        tmp.forEach((_item)->{
-            getTimes().put(_item.getBeginn().toString(),_item.getFinish().toString());
+        System.out.println("GetDay(): "+this.getDay());
+        System.out.println("formatter"+formatter1.parse(this.getDay()));
+        
+        tmp.forEach((_item) -> {
+            getTimes().put(_item.getBeginn().toString(), _item.getFinish().toString());
         });
         System.out.println("\nGetTimes\n");
-        System.out.println(getTimes().toString()+"\n");
+        System.out.println(getTimes().toString() + "\n");
     }
 
     // Nachricht fuer Bestaetigung/Freigeben des Termins

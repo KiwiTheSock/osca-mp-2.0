@@ -45,7 +45,7 @@
                         <p:outputLabel for="moduls" value="Module: " style="font-family: Andale Mono, monospace; font-size: 14px"/>
 
                         <p:selectOneMenu id="moduls" value="#{dropdownViewStudent.modul}" style="width:150px; font-family: Andale Mono, monospace; font-size: 14px">
-                            <p:ajax update="moduls"/>
+                            <p:ajax update="moduls day"/>
                             <f:selectItem itemLabel="Modul auswaehlen" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{dropdownViewStudent.moduls}" />
                         </p:selectOneMenu>

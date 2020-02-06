@@ -36,8 +36,7 @@ public class Department extends AbstractEntity {
     private String modulename;
     private String semester;
 
-    
-    //ManyToMany 
+    //ManyToMany für den Dozent
     @ManyToMany(mappedBy = "departments")
     private Set<Customer> customers = new HashSet<>();
 
@@ -48,8 +47,8 @@ public class Department extends AbstractEntity {
     public void setCustomers(Set<Customer> customers) {
         this.customers = customers;
     }
-    
-    //OneToMany
+
+    //OneToMany für das Modul
     @OneToMany(
             mappedBy = "department",
             cascade = CascadeType.ALL,
@@ -61,12 +60,12 @@ public class Department extends AbstractEntity {
         exams.add(exam);
         exam.setDepart(this);
     }
-    
-    public void removeExam(Exam exam){
+
+    public void removeExam(Exam exam) {
         exams.remove(exam);
         exam.setDatum(null);
     }
-    
+
     public Set<Exam> getExams() {
         return exams;
     }

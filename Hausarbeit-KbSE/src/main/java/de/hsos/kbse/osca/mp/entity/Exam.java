@@ -8,9 +8,12 @@ package de.hsos.kbse.osca.mp.entity;
 import de.hsos.kbse.osca.mp.abstracts.AbstractEntity;
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -59,6 +62,18 @@ public class Exam extends AbstractEntity {
 
     public void setDepart(Department depart) {
         this.department = depart;
+    }
+    
+    //ManyToMany für den Studenten
+    @ManyToMany(mappedBy = "exams")
+    private Set<Customer> customers = new HashSet<>();
+
+    public Set<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Set<Customer> customers) {
+        this.customers = customers;
     }
     
     public Exam() {

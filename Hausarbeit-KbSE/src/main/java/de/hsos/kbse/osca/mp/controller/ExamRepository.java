@@ -7,6 +7,7 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import java.util.Date;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -52,6 +53,15 @@ public class ExamRepository extends AbstractFacade<Exam> {
                 .getResultList();
 
         return resultList;
+    }
+    
+    public List<Exam> findByDay(Date date) {
+        System.err.println("SQL :"
+                + "gwt all z");
+        TypedQuery<Exam> query;
+        query = this.em.createNamedQuery("Exam.findByDay",Exam.class);
+        return query.getResultList();
+        
     }
 
     @Override

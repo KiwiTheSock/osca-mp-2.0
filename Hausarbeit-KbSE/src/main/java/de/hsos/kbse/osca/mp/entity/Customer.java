@@ -45,7 +45,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Customer.findByType", query = "SELECT c FROM Customer c WHERE c.type = :type")})
 public class Customer extends AbstractEntity {
 
-    
     private String email;
 
     private String firstname;
@@ -58,6 +57,7 @@ public class Customer extends AbstractEntity {
 
     private Integer type;
 
+    //Admin des Moduls
     @ManyToMany(cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
@@ -72,10 +72,31 @@ public class Customer extends AbstractEntity {
         departments.add(dep);
         dep.getCustomers().add(this);
     }
-    
+
     public void removeDepartment(Department dep) {
         departments.remove(dep);
         dep.getCustomers().add(null);
+    }
+
+    //Bei Prüfung angemeldet
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "customer_exam",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "exam_id")
+    )
+    private Set<Exam> exams = new HashSet<>();
+    
+    public void addExam(Exam ex) {
+        exams.add(ex);
+        ex.getCustomers().add(this);
+    }
+    
+    public void removeExam(Exam ex) {
+        exams.remove(ex);
+        ex.getCustomers().add(null);
     }
 
     public Customer() {
@@ -150,7 +171,6 @@ public class Customer extends AbstractEntity {
     public void setType(Integer type) {
         this.type = type;
     }
-
 
     @Override
     public int hashCode() {
