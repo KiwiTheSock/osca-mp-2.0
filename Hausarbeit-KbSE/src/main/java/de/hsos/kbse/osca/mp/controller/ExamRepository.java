@@ -6,7 +6,7 @@
 package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Exam;
-import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import de.hsos.kbse.osca.mp.abstracts.AbstractFacade;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,8 +14,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,7 +24,7 @@ import javax.persistence.TypedQuery;
 
 /**
  *
- * @author Philipp
+ * @author Philipp Markmann
  */
 @Named
 @RequestScoped

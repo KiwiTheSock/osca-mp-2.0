@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.osca.mp.view;
+package de.hsos.kbse.osca.mp.boundary;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Department;
@@ -153,7 +153,6 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
             getConvertListTerms().add(map.getValue());
         });
 
-        
         for (Map.Entry<String, String> map : getExamMins().entrySet()) {
             getConvertListExamMins().add(map.getValue());
         }
@@ -176,34 +175,30 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
     public void displayLogDate() throws ParseException {
         FacesMessage msg;
         if (getDate2() != null) {
-
             msg = new FacesMessage("Bestaetigt: ", "Tag " + getDate2() + " hinzugefuegt!");
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Tag konnte nicht gesetzt werden.");
         }
-        //Date day, Double duration, Time start, Time finish, Integer spaceforstudents
+
         DateFormat formatter = new SimpleDateFormat("HH:mm");
         java.sql.Time startTime = new java.sql.Time(formatter.parse(getExamMin()).getTime());
         java.sql.Time endTime = new java.sql.Time(formatter.parse(getExamMax()).getTime());
-        //this.Exams.add(new Exam(getDate2(), this.duration, getExamMin(), getExamMax(), this.studentCount));
-        System.out.println("Hier wird EXAM angelegt!\nTag: " + getDate2() + "\nDuration:" + this.duration + "\nStarzeit: " + startTime + "\nEndzeit: " + endTime + "\nAmount of Space: " + this.studentCount + "\nFür Module: " + this.modulName);
+
         persisExam(startTime, endTime);
+
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void persisExam(Time start, Time end) throws ParseException {
 
-        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()");
-        //Anzahl der Prüfung berechnen
         int tges = end.getHours() - start.getHours();
         int slotges = (tges * 60) / this.duration;
 
-        //Berechnung des nächsten Termin + duration
         java.sql.Time myStartTime = start;
         java.sql.Time myEndTime = end;
+
         LocalTime localStartTime = myStartTime.toLocalTime();
         LocalTime localEndTime = myEndTime.toLocalTime();
-        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewDozent.persisExam()\nGesamtzeit: " + tges + "\nSlotanzahl: " + slotges);
 
         List<Exam> exams = new ArrayList<>();
 
@@ -213,28 +208,18 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
             tmp.setDatum(getDate2());
             tmp.setDuration(this.duration);
             tmp.setSpaceforstudents(this.studentCount);
-            System.out.println("Slot:" + i);
-            //setTimeStart = localStartTime;
-
-            //times.add(setTimeStart);
-            System.out.println("Anfang: " + localStartTime.toString());
             tmp.setBeginn(Time.valueOf(localStartTime));
+
             localStartTime = localStartTime.plusMinutes(this.duration);
+
             tmp.setFinish(Time.valueOf(localStartTime));
-            //setTimeEnd = localStartTime;
-            //times.add(setTimeEnd);
-            System.out.println("Ende: " + localStartTime.toString());
-            //tmp.setDepartment(this.modulName);
+
             Department department = this.Departments.getByModulname(this.modulName);
             department.addExam(tmp);
-            //tmp.getDepartment().add(tt);
-            //tmp.getDepartment().add(this.Departments.getByModulname(this.modulName)); //Worked nicht
             exams.add(tmp);
-
         }
 
         exams.forEach((exam) -> {
-            //System.out.println("Exam: "+exam.toString());
             this.Exams.create(exam);
         });
 
@@ -295,7 +280,7 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
      */
     @Logable(logLevel = LevelEnum.INFO)
     public void setTerm(String term) {
-        System.out.println("Term setted: " + term);
+
         if (term != null) {
             this.setTermExists(true);
         } else {
@@ -587,14 +572,12 @@ public class DropdownViewDozent extends AbstractRepoAccesor implements Serializa
      */
     public void setDate2(Date date2) {
         this.date2 = date2;
-        System.out.println("Date ....." + this.date2);
 
         getDays().put(this.key, date2);
         this.key += this.key + 1;
 
         for (Map.Entry<Integer, Date> map : getDays().entrySet()) {
             getConvertListDays().add(map.getValue());
-            System.out.println("List: " + map.getValue().toString());
         }
     }
 

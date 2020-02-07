@@ -6,7 +6,7 @@
 package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Department;
-import de.hsos.kbse.osca.mp.service.AbstractFacade;
+import de.hsos.kbse.osca.mp.abstracts.AbstractFacade;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

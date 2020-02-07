@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.osca.mp.view;
+package de.hsos.kbse.osca.mp.boundary;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Customer;
@@ -27,15 +27,15 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author wihowert
+ * @author wihowert philippmarkmann
  */
 @Named
 @SessionScoped
 public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
-    
+
     @Inject
     private HttpSession session;
-    
+
     // Listen fuer angemeldete Module
     private Map<String, Map<String, String>> modulDay = new HashMap<>();
     private Map<String, Map<String, String>> dayTime = new HashMap<>();
@@ -58,8 +58,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
     }
 
     public void fillDepartments() {
-        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDepartments()");
-        //Get all departmens
+
         List<Department> tmp = this.Departments.getAll();
         tmp.forEach((_item) -> {
             getModuls().put(_item.getModulename(), _item.getModulename());
@@ -68,23 +67,15 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
 
     @Logable(logLevel = LevelEnum.INFO)
     public void fillDays() {
-        System.out.println("GANZ GENAU");
-        System.out.println("de.hsos.kbse.osca.mp.view.DropdownViewStudent.fillDays()");
+        setDays(new HashMap<>());
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        setDays(new HashMap<>());
         List<Exam> tmp = this.Exams.getAllDaybyDepartment(Departments.getByModulname(getModul()).getId());
+
         tmp.forEach((_item) -> {
-            //System.out.println(_item.toString());
             getDays().put(dateFormat.format(_item.getDatum()), dateFormat.format(_item.getDatum()));
         });
-        System.out.println("GetDays:"); // Funktioniert
-        System.out.println(getDays().toString());
-    }
 
-    @Logable(logLevel = LevelEnum.INFO)
-    public void testMe() {
-        System.out.println("DAS WARN ERFOLG UND ICH BIN DAS MODUL: " + getModul());
     }
 
     @Logable(logLevel = LevelEnum.INFO)
@@ -92,15 +83,9 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         setTimes(new HashMap<>());
         List<Exam> tmp = this.Exams.findByDay(this.day);
 
-        //Ausgabe
-        System.out.println(tmp.toString());
-        System.out.println("GetDay(): " + this.getDay());
-
         tmp.forEach((_item) -> {
             getTimes().put(_item.getBeginn().toString(), _item.getFinish().toString());
         });
-        
-        System.out.println(getTimes().toString());
     }
 
     /**
@@ -108,7 +93,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
      */
     @Logable(logLevel = LevelEnum.INFO)
     public void onDepartmentErase() {
-        System.out.println("Alles klar, weiter gehts ...");
+        
         FacesMessage msg;
         if (getModul() != null && getDay() != null && getTime() != null) {
             msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr freigegeben.");
@@ -120,6 +105,7 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
 
     /**
      * onDepartmentChange
+     *
      * @throws java.text.ParseException
      */
     @Logable(logLevel = LevelEnum.INFO)
@@ -127,12 +113,27 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         FacesMessage msg;
         if (getModul() != null && getDay() != null && getTime() != null) {
             msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr bestaetigt.");
-            
-             System.out.println("ID: "+this.session.getAttribute("id"));
-            
-            Customer user = this.Customers.getById((Long)this.session.getAttribute("id"));
+
+            Customer user = this.Customers.getById((Long) this.session.getAttribute("id"));
             Exam ex = this.Exams.getByDayAndTime(getDay(), getTime());
             user.addExam(ex);
+            this.Customers.edit(user);
+
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "entsprechende Parameter nicht ausgewaehlt ...");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    @Logable(logLevel = LevelEnum.INFO)
+    public void removeExam() throws ParseException {
+        FacesMessage msg;
+        if (getModul() != null && getDay() != null && getTime() != null) {
+            msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " abgemeldet!.");
+
+            Customer user = this.Customers.getById((Long) this.session.getAttribute("id"));
+            Exam ex = this.Exams.getByDayAndTime(getDay(), getTime());
+            user.removeExam(ex);
             this.Customers.edit(user);
 
         } else {

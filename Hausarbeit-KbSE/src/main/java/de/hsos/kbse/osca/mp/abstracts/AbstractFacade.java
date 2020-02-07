@@ -3,16 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.hsos.kbse.osca.mp.service;
+package de.hsos.kbse.osca.mp.abstracts;
 
-import de.hsos.kbse.osca.mp.entity.Customer;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.json.bind.Jsonb;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 
 /**
  *
