@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -57,10 +58,7 @@ public class Customer extends AbstractEntity {
     private Integer type;
 
     //Admin des Moduls
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
+    @ManyToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinTable(name = "customer_department",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id")
@@ -78,10 +76,7 @@ public class Customer extends AbstractEntity {
     }
 
     //Bei Prüfung angemeldet
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
+    @ManyToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinTable(name = "customer_exam",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "exam_id")
@@ -90,6 +85,7 @@ public class Customer extends AbstractEntity {
 
     public void addExam(Exam ex) {
         exams.add(ex);
+        
         ex.getCustomers().add(this);
     }
 
@@ -222,7 +218,7 @@ public class Customer extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Customer{" + "email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", login=" + login + ", password=" + password + ", type=" + type + ", departments=" + departments + '}';
+        return "Customer{" + "email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", login=" + login + ", password=" + password + ", type=" + type +'}';
     }
 
 }

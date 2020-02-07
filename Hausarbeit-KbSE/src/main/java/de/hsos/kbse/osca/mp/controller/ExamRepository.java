@@ -11,8 +11,11 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +35,16 @@ public class ExamRepository extends AbstractFacade<Exam> {
         super(Exam.class);
     }
 
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    
+    
+
     public void init() throws ParseException {
         DateFormat formatter = new SimpleDateFormat("HH:mm");
         // this.getEntityManager().persist(new Exam(formatter.parse("14:22"), 30, Time.valueOf("13:00"), Time.valueOf("13:30"), 1,));));
@@ -44,8 +57,30 @@ public class ExamRepository extends AbstractFacade<Exam> {
         return query.getResultList();
     }
 
+    public Exam getByDayAndTime(String date, String time) throws ParseException {
+        System.out.println("SQL: by Day:" + date + " and Time " + time);
+
+        //List<Exam> resultList = findByDay(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//give format in which you are receiving the `String date_updated`
+        Date searchdate = sdf.parse(date);
+        LocalTime start = LocalTime.parse(time);
+        Time t = Time.valueOf(start);
+
+        Exam result = em.createQuery(
+                "SELECT e "
+                + "FROM Exam e "
+                + "WHERE e.datum = :datum "
+                + "AND e.finish = :finish", Exam.class)
+                .setParameter("datum",searchdate)
+                .setParameter("finish", t)
+                .getSingleResult();
+
+        return result;
+    }
+
     public List<Exam> getAllDaybyDepartment(Long departmentId) {
         System.out.print("SQL: get all days by " + departmentId);
+
         List<Exam> resultList = em.createQuery(
                 "select pc "
                 + "from Exam pc "
@@ -63,8 +98,8 @@ public class ExamRepository extends AbstractFacade<Exam> {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//give format in which you are receiving the `String date_updated`
         Date searchdate = sdf.parse(date);
         //Ausgabe
-        System.out.println("Bin: " + searchdate.getClass());
-        System.out.println(searchdate.toString());
+        //System.out.println("Bin: " + searchdate.getClass());
+        //System.out.println(searchdate.toString());
 
         TypedQuery<Exam> query;
         query = this.em.createNamedQuery("Exam.findByDay", Exam.class);

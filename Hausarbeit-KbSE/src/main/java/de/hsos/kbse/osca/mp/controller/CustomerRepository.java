@@ -7,12 +7,8 @@ package de.hsos.kbse.osca.mp.controller;
 
 import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
-import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.service.AbstractFacade;
 import de.hsos.kbse.osca.mp.service.AccessType;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
@@ -25,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,12 +32,22 @@ import javax.persistence.TypedQuery;
 @Named
 @ApplicationScoped
 public class CustomerRepository extends AbstractFacade<Customer> {
-
+    
+    @Inject HttpSession session;
+    
     @Inject
     private Jsonb jsonb;
 
     @PersistenceContext(unitName = "de.hsos.kbse.oscar.mp_Hausarbeit-KbSE_war_1.0-SNAPSHOTPU")
     private EntityManager em;
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 
     public CustomerRepository() {
         super(Customer.class);
@@ -86,6 +93,14 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         return this.findAllFromType(AccessType.ADMINISTRATOR.getLevelCode());
     }
 
+    public Customer getById(long id) {
+        System.out.println("SQL: getById");
+        
+        TypedQuery<Customer> query;
+        query = this.getEntityManager().createNamedQuery("Customer.findById", Customer.class);
+        return query.setParameter("id", id).getSingleResult();
+    }
+    
     //Hier Transactional Support 
     //GET reicht support 
     //
@@ -120,6 +135,7 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         this.jsonb = jsonb;
     }
 
+    
 //    public EntityManager getEm() {
 //        return em;
 //    }
@@ -127,4 +143,12 @@ public class CustomerRepository extends AbstractFacade<Customer> {
 //    public void setEm(EntityManager em) {
 //        this.em = em;
 //    }
+
+    public HttpSession getSession() {
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
+    }
 }

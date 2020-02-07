@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -65,7 +66,7 @@ public class Exam extends AbstractEntity {
     }
     
     //ManyToMany für den Studenten
-    @ManyToMany(mappedBy = "exams")
+    @ManyToMany(fetch= FetchType.EAGER, mappedBy="exams")
     private Set<Customer> customers = new HashSet<>();
 
     public Set<Customer> getCustomers() {

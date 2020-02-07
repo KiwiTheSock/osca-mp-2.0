@@ -9,10 +9,11 @@ import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
 import de.hsos.kbse.osca.mp.entity.Customer;
 import java.io.Serializable;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -23,7 +24,9 @@ import javax.servlet.http.HttpSession;
 @ApplicationScoped
 public class LoginQuery extends AbstractRepoAccesor implements Serializable {
 
-    boolean loggedIn;
+    @Inject
+    private HttpSession session;
+    
     long accountId;
 
     private Customer cust;
@@ -56,17 +59,13 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username: " + username + " konnte nicht gefunden werden!"));
             return null;
         } else {
-
-            this.loggedIn = true;
+            
             this.accountId = this.cust.getId();
-
-            //SessionHandler
-            try {
-                HttpSession sessionObj = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-                SessionHandler.store(accountId, sessionObj);
-            } catch (Exception ex) {
-                System.out.println("HTTPSession went wrong");
-            }
+            
+            this.session.setAttribute("username", this.username);
+            this.session.setAttribute("id", this.accountId);
+            
+            System.out.println("ID: Bla"+this.session.getAttribute("id"));
 
             switch (this.cust.getType()) {
 
@@ -87,28 +86,15 @@ public class LoginQuery extends AbstractRepoAccesor implements Serializable {
                     System.out.println("Default!");
                     return null;
             }
-            
-            //FaceMessage einfügen Loggin fehlgeschlagen 
 
+            //FaceMessage einfügen Loggin fehlgeschlagen 
         }
     }
 
-    public String logout() {
-        
-        System.out.println("de.hsos.kbse.osca.mp.boundary.LoginQuery.logout()");
-        //System.out.println(SessionHandler.getLogins().toString());
-        System.out.println(SessionHandler.getLogins().containsKey(this.accountId));
-        
-        //Muss noch geändert werden, da kein User hinzugefügt wird
-        if (SessionHandler.getLogins().containsKey(this.accountId)) {
-            System.out.println("Inside: logout()");
-            this.loggedIn = true;
-            this.accountId = this.cust.getId();
-            return "login.xhtml?faces-redirect=true";
-        }
-        
-        
-        return null;
+    public String logout(HttpServletRequest request) {
+        System.out.println("Logout)");
+        this.session.invalidate();
+        return "login.xhtml?faces-redirect=true";
     }
 
 }

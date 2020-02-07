@@ -86,13 +86,13 @@
                     <p:spacer style="margin-top: 30px"/>
 
                     <h:panelGrid columns="2" style="margin-bottom:10px;" cellpadding="5">
-                        <p:commandButton value="PrÃ¼fung anmelden" update="msgs day time moduls" action="#{dropdownViewStudent.onDepartmentChange()}" 
+                        <p:commandButton value="PrÃƒÂ¼fung anmelden" update="msgs day time moduls" action="#{dropdownViewStudent.onDepartmentChange()}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px;"
                                          icon="pi pi-check-circle">
                             <f:actionListener binding="#{dropdownViewStudent.fillDays()}"/>
                             <p:ajax update="msgs day time moduls"/>
                         </p:commandButton>
-                        <p:commandButton value="PrÃ¼fung freigeben" update="msgs" action="#{dropdownViewStudent.displayLog}" 
+                        <p:commandButton value="PrÃƒÂ¼fung freigeben" update="msgs" action="#{dropdownViewStudent.displayLog}" 
                                          style="font-family: Andale Mono, monospace; font-size: 15px; color: red"
                                          icon="pi pi-times-circle">
                         </p:commandButton>

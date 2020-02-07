@@ -6,6 +6,7 @@
 package de.hsos.kbse.osca.mp.view;
 
 import de.hsos.kbse.osca.mp.abstracts.AbstractRepoAccesor;
+import de.hsos.kbse.osca.mp.entity.Customer;
 import de.hsos.kbse.osca.mp.entity.Department;
 import de.hsos.kbse.osca.mp.entity.Exam;
 import de.hsos.kbse.osca.mp.logger.interceptorbinding.LevelEnum;
@@ -14,15 +15,15 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,7 +32,10 @@ import javax.inject.Named;
 @Named
 @SessionScoped
 public class DropdownViewStudent extends AbstractRepoAccesor implements Serializable {
-
+    
+    @Inject
+    private HttpSession session;
+    
     // Listen fuer angemeldete Module
     private Map<String, Map<String, String>> modulDay = new HashMap<>();
     private Map<String, Map<String, String>> dayTime = new HashMap<>();
@@ -111,23 +115,29 @@ public class DropdownViewStudent extends AbstractRepoAccesor implements Serializ
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "entsprechende Parameter nicht ausgewaehlt ...");
         }
-
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     /**
      * onDepartmentChange
+     * @throws java.text.ParseException
      */
     @Logable(logLevel = LevelEnum.INFO)
-    public void onDepartmentChange() {
-        System.out.println("Alles klar, weiter gehts ...");
+    public void onDepartmentChange() throws ParseException {
         FacesMessage msg;
         if (getModul() != null && getDay() != null && getTime() != null) {
             msg = new FacesMessage("Bestaetigt: ", getModul() + " am " + getDay() + " um " + getTime() + " Uhr bestaetigt.");
+            
+             System.out.println("ID: "+this.session.getAttribute("id"));
+            
+            Customer user = this.Customers.getById((Long)this.session.getAttribute("id"));
+            Exam ex = this.Exams.getByDayAndTime(getDay(), getTime());
+            user.addExam(ex);
+            this.Customers.edit(user);
+
         } else {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "entsprechende Parameter nicht ausgewaehlt ...");
         }
-
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
