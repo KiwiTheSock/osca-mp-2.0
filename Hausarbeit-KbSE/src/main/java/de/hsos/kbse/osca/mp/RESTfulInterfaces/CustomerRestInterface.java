@@ -5,13 +5,6 @@
  */
 package de.hsos.kbse.osca.mp.RESTfulInterfaces;
 
-import de.hsos.kbse.osca.mp.entity.Customer;
-import de.hsos.kbse.osca.mp.service.AccessType;
-import java.util.List;
-import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.persistence.TypedQuery;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -59,6 +52,35 @@ public interface CustomerRestInterface {
             @QueryParam("login") String login,
             @QueryParam("password") String password);
 
+    /**
+     *
+     * @param login
+     * @return
+     */
+    @GET
+    @Path("login/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response findCustomerByLogin(@PathParam("login") String login);
+
+    /**
+     *
+     * @return
+     */
+    @GET
+    @Path("dozents")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response findAllDozents();
+
+    @GET
+    @Path("students")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response findAllStudents();
+
+    @GET
+    @Path("admins")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response findAllAdmins();
+
     @PUT
     @Path("update/{login}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -71,35 +93,51 @@ public interface CustomerRestInterface {
             @QueryParam("password") String password
     );
 
+    /**
+     *
+     * @param login
+     * @param newLogin
+     * @return
+     */
+    @PUT
+    @Path("updateLogin/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomerLogin(
+            @PathParam("login") String login,
+            @QueryParam("newLogin") String newLogin);
+
+    @PUT
+    @Path("updateFirstname/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomerFirstname(
+            @PathParam("login") String login,
+            @QueryParam("firstname") String firstname);
+
+    @PUT
+    @Path("updateLastname/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomerLastname(
+            @PathParam("login") String login,
+            @QueryParam("lastname") String lastname);
+
+    @PUT
+    @Path("updateEmail/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomerEmail(
+            @PathParam("login") String login,
+            @QueryParam("email") String email);
+
+    @PUT
+    @Path("updatePassword/{login}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response updateCustomerPassword(
+            @PathParam("login") String login,
+            @QueryParam("password") String password);
+
     @DELETE
     @Path("{login}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response deleteCustomer(
             @PathParam("login") String login);
-
-    /**
-     *
-     * @param login
-     * @return
-     */
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @GET
-    @Path("login/{login}")
-    public Response findCustomerByLogin(@PathParam("login") String login);
-
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @GET
-    @Path("dozents")
-    public Response findAllDozents();
-
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @GET
-    @Path("students")
-    public Response findAllStudents();
-
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @GET
-    @Path("admins")
-    public Response findAllAdmins();
 
 }

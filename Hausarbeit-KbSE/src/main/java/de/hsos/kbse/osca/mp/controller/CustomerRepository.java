@@ -115,7 +115,7 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         }
     }
 
-    public List<Customer> getAll() {
+    public Collection<Customer> getAll() {
         System.out.print("SQL: getAll()");
         TypedQuery<Customer> query;
         query = this.getEntityManager().createNamedQuery("Customer.findAll", Customer.class);
@@ -135,20 +135,4 @@ public class CustomerRepository extends AbstractFacade<Customer> {
         this.jsonb = jsonb;
     }
 
-    
-//    public EntityManager getEm() {
-//        return em;
-//    }
-//
-//    public void setEm(EntityManager em) {
-//        this.em = em;
-//    }
-
-    public HttpSession getSession() {
-        return session;
-    }
-
-    public void setSession(HttpSession session) {
-        this.session = session;
-    }
 }
